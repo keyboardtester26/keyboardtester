@@ -7,9 +7,10 @@ interface KeyboardContextType {
   testedKeys: Set<string>;
   lastKeyEvent: KeyboardEvent | null;
   isMac: boolean;
+  reset: () => void;
 }
 
-const KeyboardContext = createContext<KeyboardContextType | undefined>(undefined);
+export const KeyboardContext = createContext<KeyboardContextType | undefined>(undefined);
 
 export function KeyboardProvider({ children }: { children: ReactNode }) {
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
@@ -62,8 +63,14 @@ export function KeyboardProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  const reset = () => {
+    setPressedKeys(new Set());
+    setTestedKeys(new Set());
+    setLastKeyEvent(null);
+  };
+
   return (
-    <KeyboardContext.Provider value={{ pressedKeys, testedKeys, lastKeyEvent, isMac }}>
+    <KeyboardContext.Provider value={{ pressedKeys, testedKeys, lastKeyEvent, isMac, reset }}>
       {children}
     </KeyboardContext.Provider>
   );

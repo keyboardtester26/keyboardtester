@@ -26,7 +26,7 @@ type MouseEventInfo = {
 const MAX_HISTORY = 12;
 
 export default function Home() {
-  const { pressedKeys, testedKeys, lastKeyEvent } = useKeyboard();
+  const { pressedKeys, testedKeys, lastKeyEvent, reset: resetContext } = useKeyboard();
   const [lastEvent, setLastEvent] = useState<KeyEventInfo | null>(null);
   const [history, setHistory] = useState<KeyEventInfo[]>([]);
   const [maxSimultaneous, setMaxSimultaneous] = useState(0);
@@ -41,6 +41,7 @@ export default function Home() {
   );
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [keyboardLayout, setKeyboardLayout] = useState<"ANSI" | "ISO">("ANSI");
+  const [showNumpad, setShowNumpad] = useState(true);
   
   // Gaming test states
   const [gamingTestActive, setGamingTestActive] = useState(false);
@@ -137,6 +138,9 @@ export default function Home() {
 
   // Reset function to clear all test data
   const handleReset = () => {
+    // Reset context state (testedKeys, pressedKeys)
+    resetContext();
+    // Reset local component state
     setLastEvent(null);
     setHistory([]);
     setMaxSimultaneous(0);
@@ -1086,71 +1090,80 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setKeyboardLayout(keyboardLayout === "ANSI" ? "ISO" : "ANSI")}
-                className="rounded-md border border-zinc-300 bg-white px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-600 transition-colors hover:bg-zinc-50 sm:text-xs"
+                className="rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
                 aria-label={`Switch to ${keyboardLayout === "ANSI" ? "ISO" : "ANSI"} layout`}
               >
                 {keyboardLayout}
               </button>
               <button
                 type="button"
+                onClick={() => setShowNumpad(!showNumpad)}
+                className="rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
+                aria-label={showNumpad ? "Hide numpad" : "Show numpad"}
+              >
+                <span className="hidden sm:inline">{showNumpad ? "Hide" : "Show"} Numpad</span>
+                <span className="sm:hidden">Num</span>
+              </button>
+              <button
+                type="button"
                 onClick={handleReset}
-                className="flex items-center gap-1.5 rounded-md border border-zinc-300 bg-white px-2.5 py-1 text-[10px] font-medium text-zinc-600 transition-colors hover:bg-zinc-50 sm:text-xs"
+                className="flex items-center gap-1.5 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
                 aria-label="Reset all test data"
               >
                 <RotateCcw className="h-3 w-3" />
                 <span className="hidden sm:inline">Reset</span>
               </button>
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+              <span className="rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
                 Live · Listening to key presses
               </span>
             </div>
           </div>
 
-          <div className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/80 p-3 text-center text-xs text-zinc-500 sm:text-sm">
+          <div className="rounded-xl border border-dashed border-zinc-200 dark:border-zinc-700 bg-zinc-50/80 dark:bg-zinc-800/50 p-3 text-center text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
             This tester listens to your whole keyboard. Just{" "}
-            <span className="font-medium text-zinc-700">
+            <span className="font-medium text-zinc-700 dark:text-zinc-300">
               start pressing keys
             </span>{" "}
             and they&apos;ll light up. Try holding multiple keys to check
             anti-ghosting.
           </div>
 
-          <div className="space-y-2 rounded-xl bg-zinc-900 px-3 py-3 text-xs text-zinc-200 sm:px-4 sm:py-4 sm:text-sm">
+          <div className="space-y-2 rounded-xl bg-zinc-900 dark:bg-zinc-950 px-3 py-3 text-xs text-zinc-200 dark:text-zinc-300 sm:px-4 sm:py-4 sm:text-sm">
             <div className="flex items-center justify-between">
-              <span className="font-medium text-zinc-100">Current key</span>
+              <span className="font-medium text-zinc-100 dark:text-zinc-200">Current key</span>
               {currentlyPressed.length > 0 ? (
-                <span className="text-[11px] text-emerald-400 sm:text-xs">
+                <span className="text-[11px] text-emerald-400 dark:text-emerald-500 sm:text-xs">
                   {currentlyPressed.length} key
                   {currentlyPressed.length > 1 ? "s" : ""} pressed
                 </span>
               ) : (
-                <span className="text-[11px] text-zinc-500 sm:text-xs">
+                <span className="text-[11px] text-zinc-500 dark:text-zinc-400 sm:text-xs">
                   Waiting for input…
                 </span>
               )}
             </div>
 
-            <div className="flex items-center justify-between gap-2 rounded-lg bg-zinc-800/80 px-3 py-2 sm:px-4 sm:py-3">
+            <div className="flex items-center justify-between gap-2 rounded-lg bg-zinc-800/80 dark:bg-zinc-900/80 px-3 py-2 sm:px-4 sm:py-3">
               <div className="flex items-baseline gap-2">
-                <span className="text-lg font-semibold tracking-tight sm:text-2xl">
+                <span className="text-lg font-semibold tracking-tight dark:text-zinc-100 sm:text-2xl">
                   {lastEvent?.key || "—"}
                 </span>
                 {lastEvent?.code && (
-                  <span className="rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-zinc-400">
+                  <span className="rounded-full bg-zinc-900 dark:bg-zinc-800 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-500">
                     {lastEvent.code}
                   </span>
                 )}
               </div>
-              <div className="flex flex-col items-end text-[10px] text-zinc-400">
+              <div className="flex flex-col items-end text-[10px] text-zinc-400 dark:text-zinc-500">
                 <span>
                   Location:{" "}
-                  <span className="font-medium text-zinc-100">
+                  <span className="font-medium text-zinc-100 dark:text-zinc-200">
                     {lastEvent ? lastEvent.location : "—"}
                   </span>
                 </span>
                 <span>
                   Time:{" "}
-                  <span className="font-medium text-zinc-100">
+                  <span className="font-medium text-zinc-100 dark:text-zinc-200">
                     {lastEvent?.timestamp || "—"}
                   </span>
                 </span>
@@ -1159,7 +1172,7 @@ export default function Home() {
           </div>
 
           <div className="mt-2">
-            <Keyboard layout={keyboardLayout} />
+            <Keyboard layout={keyboardLayout} showNumpad={showNumpad} />
           </div>
         </div>
       </section>

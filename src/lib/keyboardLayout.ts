@@ -166,6 +166,14 @@ export const NAV_CLUSTER: Row[] = [
 export const NUMPAD: Row[] = [
   {
     keys: [
+      { label: "Del\nIns", code: "Delete", width: 1, variant: "numpad" },
+      { label: "Pause\nBreak", code: "Pause", width: 1, variant: "numpad" },
+      { label: "PrtSc\nSysRq", code: "PrintScreen", width: 1, variant: "numpad" },
+      { label: "Home\nEnd", code: "Home", width: 1, variant: "numpad" },
+    ],
+  },
+  {
+    keys: [
       { label: "Num", code: "NumLock", width: 1, variant: "numpad" },
       { label: "/", code: "NumpadDivide", width: 1, variant: "numpad" },
       { label: "*", code: "NumpadMultiply", width: 1, variant: "numpad" },

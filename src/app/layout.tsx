@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { KeyboardProvider } from "@/contexts/KeyboardContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import Settings from "@/components/Settings";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -161,7 +163,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Keyboard Tester Pro" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[radial-gradient(circle_at_top,_#f9fafb_0,_#e5e7eb_40%,_#e5e7eb_100%)] text-zinc-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[radial-gradient(circle_at_top,_#f9fafb_0,_#e5e7eb_40%,_#e5e7eb_100%)] dark:bg-[radial-gradient(circle_at_top,_#18181b_0,_#27272a_40%,_#27272a_100%)] text-zinc-900 dark:text-zinc-100`}
       >
         {/* Google AdSense */}
         <Script
@@ -184,76 +186,83 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApp) }}
         />
 
-        <div className="min-h-screen text-zinc-900">
-          <header className="border-b border-zinc-200 bg-white/80 backdrop-blur">
-            <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-              <a href="/" className="flex items-center gap-2 sm:gap-3" aria-label="Keyboard Tester Pro Home">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-600 text-sm font-semibold text-white shadow-sm shadow-zinc-900/20">
-                  K
-                </span>
-                <span className="text-sm font-semibold tracking-tight text-zinc-900 sm:text-base">
-                  Keyboard Tester Pro
-                </span>
-              </a>
-              <nav className="flex items-center gap-3 text-xs font-medium text-zinc-600 sm:gap-4" aria-label="Main navigation">
-                <a
-                  href="/about"
-                  className="rounded-full px-3 py-1 hover:bg-zinc-100"
-                >
-                  About
+        <ThemeProvider>
+          <div className="min-h-screen text-zinc-900 dark:text-zinc-100">
+            <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
+              <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+                <a href="/" className="flex items-center gap-2 sm:gap-3" aria-label="Keyboard Tester Pro Home">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-600 dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-300 text-sm font-semibold text-white dark:text-zinc-900 shadow-sm shadow-zinc-900/20 dark:shadow-zinc-100/20">
+                    K
+                  </span>
+                  <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-base">
+                    Keyboard Tester Pro
+                  </span>
                 </a>
-                <a
-                  href="/blog"
-                  className="hidden rounded-full px-3 py-1 hover:bg-zinc-100 sm:inline-flex"
-                >
-                  Blog
-                </a>
-                <a
-                  href="/faq"
-                  className="hidden rounded-full px-3 py-1 hover:bg-zinc-100 sm:inline-flex"
-                >
-                  FAQ
-                </a>
-                <a
-                  href="/contact"
-                  className="rounded-full px-3 py-1 hover:bg-zinc-100"
-                >
-                  Contact
-                </a>
-                <a
-                  href="/privacy"
-                  className="hidden rounded-full px-3 py-1 hover:bg-zinc-100 sm:inline-flex"
-                >
-                  Privacy
-                </a>
-              </nav>
-            </div>
-          </header>
+                <nav className="flex items-center gap-3 text-xs font-medium text-zinc-600 dark:text-zinc-400 sm:gap-4" aria-label="Main navigation">
+                  <a
+                    href="/about"
+                    className="rounded-full px-3 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  >
+                    About
+                  </a>
+                  <a
+                    href="/blog"
+                    className="hidden rounded-full px-3 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 sm:inline-flex"
+                  >
+                    Blog
+                  </a>
+                  <a
+                    href="/faq"
+                    className="hidden rounded-full px-3 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 sm:inline-flex"
+                  >
+                    FAQ
+                  </a>
+                  <a
+                    href="/contact"
+                    className="rounded-full px-3 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  >
+                    Contact
+                  </a>
+                  <a
+                    href="/privacy"
+                    className="hidden rounded-full px-3 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 sm:inline-flex"
+                  >
+                    Privacy
+                  </a>
+                  <div className="ml-2 border-l border-zinc-200 dark:border-zinc-700 pl-3">
+                    <KeyboardProvider>
+                      <Settings />
+                    </KeyboardProvider>
+                  </div>
+                </nav>
+              </div>
+            </header>
 
-          <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-            <KeyboardProvider>{children}</KeyboardProvider>
-          </main>
+            <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+              <KeyboardProvider>{children}</KeyboardProvider>
+            </main>
 
-          <footer className="border-t border-zinc-200 bg-white/80">
+            <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80">
             <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-              <p>
+              <p className="dark:text-zinc-400">
                 © {new Date().getFullYear()} Keyboard Tester Pro. All rights
                 reserved.
               </p>
               <div className="flex flex-wrap items-center gap-3">
-                <a href="/privacy" className="hover:text-zinc-700">
+                <a href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
                   Privacy Policy
                 </a>
-                <a href="/terms" className="hover:text-zinc-700">
+                <a href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
                   Terms of Use
                 </a>
-                <a href="/contact" className="hover:text-zinc-700">
+                <a href="/contact" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
                   Contact
                 </a>
               </div>
             </div>
           </footer>
         </div>
+        </ThemeProvider>
       </body>
     </html>
   );

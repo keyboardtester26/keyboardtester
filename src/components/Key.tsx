@@ -45,15 +45,18 @@ function KeyComponent({
   if (isArrow) sizeClasses = "h-[1.6rem] w-[1.6rem] text-xs";
   if (isSpace) sizeClasses = "h-10 flex-1";
 
-  // Background - matching website style
+  // Background - matching website style with dark mode support
+  const isSpacer = code.startsWith("NumpadSpacer") || code.startsWith("Spacer");
   const isYellowKey = isYellow || (code.startsWith("F") && ["F1", "F2", "F3"].includes(code));
-  const bgClass = isYellowKey
-    ? "bg-amber-200 border-amber-300 text-amber-900"
-    : isPressed
-      ? "bg-emerald-500 border-emerald-400 text-white"
-      : hasBeenTested
-        ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-        : "bg-white border-zinc-300 text-zinc-700";
+  const bgClass = isSpacer
+    ? "bg-transparent border-transparent opacity-0 pointer-events-none"
+    : isYellowKey
+      ? "bg-amber-200 dark:bg-amber-900/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200"
+      : isPressed
+        ? "bg-emerald-500 dark:bg-emerald-600 border-emerald-400 dark:border-emerald-500 text-white"
+        : hasBeenTested
+          ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400"
+          : "bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300";
 
   const shadowClass = isPressed
     ? "shadow-md"
@@ -64,16 +67,28 @@ function KeyComponent({
     : "";
 
   // Text alignment - handle Mac symbols
+  const isBackspace = code === "Backspace";
+  const isNumpadEnter = code === "NumpadEnter";
   const textAlignClass = isText
     ? (displayLabel.toLowerCase().includes("shift") || displayLabel.toLowerCase().includes("caps") || displayLabel === "⌃" || displayLabel === "⌘" || displayLabel === "⌥")
       ? "text-left pl-4 text-[10px]"
-      : (displayLabel.toLowerCase().includes("enter") || displayLabel.toLowerCase().includes("back"))
-        ? "text-right pr-4 text-[10px]"
+      : (displayLabel.toLowerCase().includes("enter") || isBackspace || isNumpadEnter)
+        ? "text-center text-[9px] px-1"
         : "text-center text-[10px]"
     : "text-center";
 
   // Number row with shift symbols
   const getDisplayLabel = () => {
+    // Special handling for Backspace
+    if (isBackspace) {
+      return "⌫"; // Unicode backspace symbol
+    }
+    
+    // Special handling for Numpad Enter - use shorter text
+    if (code === "NumpadEnter") {
+      return "Ent"; // Shorter text for numpad Enter
+    }
+    
     if (isNumberRow) {
       const map: Record<string, string> = {
         "`": "~\n`",
@@ -111,9 +126,10 @@ function KeyComponent({
       type="button"
       className={`${baseClasses} ${sizeClasses} ${shadowClass} ${bgClass} ${pressedClass} ${textAlignClass} ${
         hasBeenTested && !isPressed ? "ring-1 ring-emerald-300/40" : ""
-      }`}
+      } ${isBackspace ? "overflow-hidden text-ellipsis whitespace-nowrap" : ""}`}
       style={flexValue ? { flex: flexValue } : {}}
       data-key-code={code}
+      title={isBackspace ? "Backspace" : undefined}
     >
       {getDisplayLabel()}
     </button>
