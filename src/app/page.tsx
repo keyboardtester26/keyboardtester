@@ -1,65 +1,1467 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Script from "next/script";
+import { jsPDF } from "jspdf";
+import { CheckCircle2, XCircle, AlertTriangle, Check, X, RotateCcw } from "lucide-react";
+import { useKeyboard } from "@/contexts/KeyboardContext";
+import Keyboard from "@/components/Keyboard";
+import AdSlot from "@/components/AdSlot";
+
+type KeyEventInfo = {
+  key: string;
+  code: string;
+  location: number;
+  timestamp: string;
+  repeat: boolean;
+};
+
+type MouseEventInfo = {
+  type: "left" | "right" | "middle";
+  x: number;
+  y: number;
+  timestamp: string;
+};
+
+const MAX_HISTORY = 12;
 
 export default function Home() {
+  const { pressedKeys, testedKeys, lastKeyEvent } = useKeyboard();
+  const [lastEvent, setLastEvent] = useState<KeyEventInfo | null>(null);
+  const [history, setHistory] = useState<KeyEventInfo[]>([]);
+  const [maxSimultaneous, setMaxSimultaneous] = useState(0);
+  const [totalPresses, setTotalPresses] = useState(0);
+  const [perKeyCounts, setPerKeyCounts] = useState<Record<string, number>>({});
+  const [lastMouseEvent, setLastMouseEvent] = useState<MouseEventInfo | null>(
+    null
+  );
+  const [mouseHistory, setMouseHistory] = useState<MouseEventInfo[]>([]);
+  const [firstInteractionAt, setFirstInteractionAt] = useState<Date | null>(
+    null
+  );
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const [keyboardLayout, setKeyboardLayout] = useState<"ANSI" | "ISO">("ANSI");
+  
+  // Gaming test states
+  const [gamingTestActive, setGamingTestActive] = useState(false);
+  const [selectedCombo, setSelectedCombo] = useState<string | null>(null);
+  const [comboResults, setComboResults] = useState<Record<string, { passed: boolean; keysPressed: string[]; expected: string[] }>>({});
+  const [keyPressTimings, setKeyPressTimings] = useState<Record<string, number[]>>({});
+  const [rapidPressCount, setRapidPressCount] = useState(0);
+  const [rapidPressStartTime, setRapidPressStartTime] = useState<number | null>(null);
+  const [lastKeyPressTime, setLastKeyPressTime] = useState<number | null>(null);
+
+  // Gaming combo presets
+  const gamingCombos: Record<string, string[]> = {
+    "WASD + Space": ["KeyW", "KeyA", "KeyS", "KeyD", "Space"],
+    "WASD + Shift": ["KeyW", "KeyA", "KeyS", "KeyD", "ShiftLeft"],
+    "WASD + Space + Shift": ["KeyW", "KeyA", "KeyS", "KeyD", "Space", "ShiftLeft"],
+    "WASD + Ctrl": ["KeyW", "KeyA", "KeyS", "KeyD", "ControlLeft"],
+    "QWE + ASD": ["KeyQ", "KeyW", "KeyE", "KeyA", "KeyS", "KeyD"],
+    "Arrow Keys": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
+    "Number Row": ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5"],
+  };
+
+  // Sync context state with local state for display
+  useEffect(() => {
+    if (lastKeyEvent) {
+      const now = Date.now();
+      const info: KeyEventInfo = {
+        key: lastKeyEvent.key,
+        code: lastKeyEvent.code,
+        location: lastKeyEvent.location,
+        timestamp: new Date().toLocaleTimeString(),
+        repeat: lastKeyEvent.repeat,
+      };
+      setLastEvent(info);
+      setHistory((prev) => [info, ...prev].slice(0, MAX_HISTORY));
+      setMaxSimultaneous((prevMax) =>
+        pressedKeys.size > prevMax ? pressedKeys.size : prevMax
+      );
+      setTotalPresses((prev) => prev + 1);
+      setPerKeyCounts((prev) => {
+        const next = { ...prev };
+        next[lastKeyEvent.code] = (next[lastKeyEvent.code] || 0) + 1;
+        return next;
+      });
+      
+      // Track key press timing for response time test
+      if (gamingTestActive) {
+        setKeyPressTimings((prev) => {
+          const next = { ...prev };
+          if (!next[lastKeyEvent.code]) {
+            next[lastKeyEvent.code] = [];
+          }
+          next[lastKeyEvent.code].push(now);
+          return next;
+        });
+
+        // Rapid press test
+        if (lastKeyPressTime) {
+          const timeDiff = now - lastKeyPressTime;
+          if (timeDiff < 100) { // Less than 100ms between presses
+            setRapidPressCount((prev) => prev + 1);
+          }
+        }
+        setLastKeyPressTime(now);
+        if (!rapidPressStartTime) {
+          setRapidPressStartTime(now);
+        }
+      }
+      
+      if (!firstInteractionAt) {
+        setFirstInteractionAt(new Date());
+      }
+    }
+  }, [lastKeyEvent, pressedKeys, firstInteractionAt, gamingTestActive, lastKeyPressTime, rapidPressStartTime]);
+
+  // Check gaming combo results
+  useEffect(() => {
+    if (gamingTestActive && selectedCombo && gamingCombos[selectedCombo]) {
+      const expectedKeys = gamingCombos[selectedCombo];
+      const pressedArray = Array.from(pressedKeys);
+      const allPressed = expectedKeys.every((key) => pressedArray.includes(key));
+      
+      if (pressedArray.length > 0) {
+        setComboResults((prev) => ({
+          ...prev,
+          [selectedCombo]: {
+            passed: allPressed && pressedArray.length === expectedKeys.length,
+            keysPressed: pressedArray,
+            expected: expectedKeys,
+          },
+        }));
+      }
+    }
+  }, [pressedKeys, gamingTestActive, selectedCombo]);
+
+  // Reset function to clear all test data
+  const handleReset = () => {
+    setLastEvent(null);
+    setHistory([]);
+    setMaxSimultaneous(0);
+    setTotalPresses(0);
+    setPerKeyCounts({});
+    setLastMouseEvent(null);
+    setMouseHistory([]);
+    setFirstInteractionAt(null);
+    setGamingTestActive(false);
+    setSelectedCombo(null);
+    setComboResults({});
+    setKeyPressTimings({});
+    setRapidPressCount(0);
+    setRapidPressStartTime(null);
+    setLastKeyPressTime(null);
+  };
+
+  const currentlyPressed = Array.from(pressedKeys.values());
+  const uniqueCodes = testedKeys;
+
+  const testDurationSeconds = useMemo(() => {
+    if (!firstInteractionAt) return 0;
+    const diffMs = Date.now() - firstInteractionAt.getTime();
+    return Math.max(0, Math.round(diffMs / 1000));
+  }, [firstInteractionAt]);
+
+  // Enhanced FAQ Schema with more questions
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How does Keyboard Tester Pro work?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Keyboard Tester Pro listens to keyboard events in your browser. When you press a key, the matching key lights up on the virtual keyboard so you can see exactly what is being detected. All processing happens locally in your browser - no data is sent to servers.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Is Keyboard Tester Pro free?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, Keyboard Tester Pro is completely free to use in your browser. There is no installation, signup, or payment required. You can test your keyboard as many times as you want.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Will my keystrokes be recorded or stored?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "No. Keystrokes are processed locally in your browser only to visualize which keys are being pressed. They are never sent to a server, stored, or recorded. Your privacy is completely protected.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Does Keyboard Tester Pro work on Mac and Windows?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, Keyboard Tester Pro works on all operating systems including Windows, Mac, Linux, Chrome OS, and mobile devices. It runs entirely in your web browser, so no installation is needed.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I test for keyboard ghosting?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "To test for keyboard ghosting, hold down multiple keys simultaneously (like W + A + Space for gaming). If all keys light up correctly on the virtual keyboard, your keyboard supports anti-ghosting. If some keys don't register, your keyboard has ghosting issues.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is N-key rollover?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "N-key rollover (NKRO) means your keyboard can register all keys pressed simultaneously. Gaming keyboards often support full NKRO, while standard keyboards may only support 6-key rollover. Test by pressing many keys at once and see if they all register.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can I test a mechanical keyboard?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, Keyboard Tester Pro works with all keyboard types including mechanical, membrane, scissor-switch, and laptop keyboards. The tester will show you which keys are working and which may be stuck or failing.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I know if a key is stuck?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "If a key stays highlighted on the virtual keyboard after you release it, that indicates a stuck key. This usually means the switch is damaged or there's debris preventing the key from returning to its normal position.",
+        },
+      },
+    ],
+  };
+
+  // HowTo Schema for keyboard testing process
+  const howToJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to Test Your Keyboard Using Keyboard Tester Pro",
+    description: "Step-by-step guide to testing your keyboard for stuck keys, ghosting, and functionality issues.",
+    step: [
+      {
+        "@type": "HowToStep",
+        position: 1,
+        name: "Open Keyboard Tester Pro",
+        text: "Navigate to keyboardtesterpro.com in your web browser. No installation or signup required.",
+      },
+      {
+        "@type": "HowToStep",
+        position: 2,
+        name: "Start Pressing Keys",
+        text: "Begin pressing keys on your physical keyboard. Watch the virtual keyboard on screen - each key you press will light up in real-time.",
+      },
+      {
+        "@type": "HowToStep",
+        position: 3,
+        name: "Test All Keys",
+        text: "Systematically test every key including letters, numbers, function keys, modifiers, and special keys. Keys that have been tested will remain highlighted.",
+      },
+      {
+        "@type": "HowToStep",
+        position: 4,
+        name: "Test Anti-Ghosting",
+        text: "Hold down multiple keys simultaneously (like W + A + Space for gaming). All keys should light up. If some don't register, your keyboard has ghosting issues.",
+      },
+      {
+        "@type": "HowToStep",
+        position: 5,
+        name: "Check for Stuck Keys",
+        text: "Release all keys and check if any remain highlighted on the virtual keyboard. Stuck keys indicate a hardware problem.",
+      },
+      {
+        "@type": "HowToStep",
+        position: 6,
+        name: "Review Test Report",
+        text: "Click 'View detailed report' to see statistics including total key presses, unique keys tested, and most pressed keys. Download as PDF if needed.",
+      },
+    ],
+  };
+
+  // Breadcrumb Schema
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://keyboardtesterpro.com",
+      },
+    ],
+  };
+
+  const handleDownloadPdf = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const marginX = 12;
+    const marginTop = 36;
+    const marginBottom = 25;
+    const headerHeight = 28;
+    const lineHeight = 5;
+    const sectionSpacing = 10;
+    const boxPadding = 4;
+
+    // Helper function to add a new page with header
+    const addPage = () => {
+      doc.addPage();
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, pageWidth, headerHeight, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(15);
+      doc.text("Keyboard Tester Pro", marginX, 14);
+      doc.setFontSize(10);
+      doc.text("Keyboard & Mouse Diagnostic Report", marginX, 22);
+      doc.setFontSize(9);
+      doc.setTextColor(226, 232, 240);
+      doc.text("keyboardtesterpro.com", pageWidth - marginX, 11, {
+        align: "right",
+      });
+      doc.text(`Report Date: ${new Date().toLocaleDateString()}`, pageWidth - marginX, 18, {
+        align: "right",
+      });
+    };
+
+    // Helper function to check if we need a new page
+    const checkPageBreak = (requiredHeight: number, currentY: number): number => {
+      if (currentY + requiredHeight > pageHeight - marginBottom) {
+        addPage();
+        return marginTop;
+      }
+      return currentY;
+    };
+
+    // Helper function to draw a section box
+    const drawSectionBox = (startY: number, contentHeight: number, title: string) => {
+      const boxHeight = contentHeight + 9 + (boxPadding * 2); // Header + content + padding
+      const boxY = checkPageBreak(boxHeight, startY);
+      
+      doc.setDrawColor(229, 231, 235);
+      doc.setFillColor(249, 250, 251);
+      doc.roundedRect(marginX, boxY, pageWidth - marginX * 2, boxHeight, 2, 2, "FD");
+      doc.setFillColor(243, 244, 246);
+      doc.rect(marginX, boxY, pageWidth - marginX * 2, 9, "F");
+      
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(10);
+      doc.text(title, marginX + boxPadding, boxY + 6);
+      
+      return boxY + 9 + boxPadding;
+    };
+
+    // Initial header
+    doc.setFillColor(15, 23, 42);
+    doc.rect(0, 0, pageWidth, headerHeight, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(15);
+    doc.text("Keyboard Tester Pro", marginX, 14);
+    doc.setFontSize(10);
+    doc.text("Keyboard & Mouse Diagnostic Report", marginX, 22);
+    doc.setFontSize(9);
+    doc.setTextColor(226, 232, 240);
+    doc.text("keyboardtesterpro.com", pageWidth - marginX, 11, {
+      align: "right",
+    });
+    doc.text(`Report Date: ${new Date().toLocaleDateString()}`, pageWidth - marginX, 18, {
+      align: "right",
+    });
+
+    let y = marginTop;
+
+    // Session Summary Section
+    y = checkPageBreak(22, y);
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(marginX, y - 4, pageWidth - marginX * 2, 18, 2, 2, "F");
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(11);
+    doc.text("Session Summary", marginX + 4, y + 1);
+
+    doc.setFontSize(9);
+    doc.setTextColor(55, 65, 81);
+    const summaryY = y + 7;
+    doc.text(`Total key presses: ${totalPresses}`, marginX + 4, summaryY);
+    doc.text(
+      `Unique keys: ${uniqueCodes.size}`,
+      marginX + (pageWidth - marginX * 2) / 3,
+      summaryY
+    );
+    doc.text(
+      `Max keys at once: ${maxSimultaneous}`,
+      marginX + ((pageWidth - marginX * 2) / 3) * 2,
+      summaryY
+    );
+
+    if (firstInteractionAt) {
+      doc.text(
+        `Duration: ${Math.floor(testDurationSeconds / 60)}m ${
+          testDurationSeconds % 60
+        }s`,
+        marginX + 4,
+        y + 13
+      );
+    }
+
+    y += 26 + sectionSpacing;
+
+    // Keyboard Statistics Section
+    const allTopKeys = Object.entries(perKeyCounts)
+      .sort((a, b) => b[1] - a[1]);
+    
+    // Calculate content height for keyboard section
+    let keyboardContentHeight = (lineHeight * 3) + 2; // Basic stats
+    if (allTopKeys.length > 0) {
+      keyboardContentHeight += lineHeight; // "Most Pressed Keys:" header
+      const keysToShow = Math.min(allTopKeys.length, 25);
+      keyboardContentHeight += (lineHeight * keysToShow);
+      if (allTopKeys.length > 25) {
+        keyboardContentHeight += lineHeight; // "...and X more" line
+      }
+    }
+
+    let innerY = drawSectionBox(y, keyboardContentHeight, "Keyboard Statistics");
+    
+    doc.setFontSize(9);
+    doc.setTextColor(55, 65, 81);
+    doc.text(`Total presses:`, marginX + boxPadding, innerY);
+    doc.text(`${totalPresses}`, pageWidth - marginX - boxPadding, innerY, {
+      align: "right",
+    });
+    innerY += lineHeight;
+    doc.text(`Max keys at once:`, marginX + boxPadding, innerY);
+    doc.text(`${maxSimultaneous}`, pageWidth - marginX - boxPadding, innerY, {
+      align: "right",
+    });
+    innerY += lineHeight;
+    doc.text(`Unique keys tested:`, marginX + boxPadding, innerY);
+    doc.text(`${uniqueCodes.size}`, pageWidth - marginX - boxPadding, innerY, {
+      align: "right",
+    });
+    innerY += lineHeight + 2;
+
+    // Most pressed keys
+    if (allTopKeys.length > 0) {
+      doc.setTextColor(31, 41, 55);
+      doc.setFontSize(9);
+      doc.text("Most Pressed Keys:", marginX + boxPadding, innerY);
+      innerY += lineHeight;
+
+      doc.setFontSize(8);
+      doc.setTextColor(55, 65, 81);
+      
+      const keysToShow = allTopKeys.slice(0, 25);
+      keysToShow.forEach(([code, count]) => {
+        innerY = checkPageBreak(lineHeight, innerY);
+        const keyText = `${code}: ${count} press${count > 1 ? "es" : ""}`;
+        doc.text(keyText, marginX + boxPadding + 4, innerY);
+        innerY += lineHeight;
+      });
+
+      if (allTopKeys.length > 25) {
+        innerY = checkPageBreak(lineHeight, innerY);
+        doc.setTextColor(107, 114, 128);
+        doc.setFontSize(7);
+        doc.text(
+          `... and ${allTopKeys.length - 25} more keys`,
+          marginX + boxPadding + 4,
+          innerY
+        );
+        innerY += lineHeight;
+      }
+    }
+
+    // Get the final Y position after keyboard section
+    const keyboardBoxStart = y;
+    y = innerY + boxPadding + sectionSpacing;
+
+    // Mouse Statistics Section
+    if (mouseHistory.length > 0) {
+      // Calculate content height for mouse section
+      let mouseContentHeight = lineHeight + 2; // Total clicks
+      mouseContentHeight += lineHeight; // "Click History:" header
+      const clicksToShow = Math.min(mouseHistory.length, 20);
+      mouseContentHeight += (lineHeight * clicksToShow);
+      if (mouseHistory.length > 20) {
+        mouseContentHeight += lineHeight; // "...and X more" line
+      }
+
+      innerY = drawSectionBox(y, mouseContentHeight, "Mouse Statistics");
+
+      doc.setFontSize(9);
+      doc.setTextColor(55, 65, 81);
+      doc.text(`Total clicks:`, marginX + boxPadding, innerY);
+      doc.text(`${mouseHistory.length}`, pageWidth - marginX - boxPadding, innerY, {
+        align: "right",
+      });
+      innerY += lineHeight + 2;
+
+      doc.setTextColor(31, 41, 55);
+      doc.setFontSize(9);
+      doc.text("Click History:", marginX + boxPadding, innerY);
+      innerY += lineHeight;
+
+      doc.setFontSize(8);
+      doc.setTextColor(55, 65, 81);
+      
+      const mouseClicksToShow = mouseHistory.slice(0, 20);
+      mouseClicksToShow.forEach((item) => {
+        innerY = checkPageBreak(lineHeight, innerY);
+        const clickText = `${item.type} click at (${item.x}, ${item.y}) - ${item.timestamp}`;
+        const maxWidth = pageWidth - marginX * 2 - boxPadding * 2 - 8;
+        doc.text(clickText, marginX + boxPadding + 4, innerY, {
+          maxWidth,
+        });
+        innerY += lineHeight;
+      });
+
+      if (mouseHistory.length > 20) {
+        innerY = checkPageBreak(lineHeight, innerY);
+        doc.setTextColor(107, 114, 128);
+        doc.setFontSize(7);
+        doc.text(
+          `... and ${mouseHistory.length - 20} more clicks`,
+          marginX + boxPadding + 4,
+          innerY
+        );
+        innerY += lineHeight;
+      }
+
+      y = innerY + boxPadding + sectionSpacing;
+    }
+
+    // Key Event History Section
+    if (history.length > 0) {
+      // Calculate content height - show up to 30 items per page
+      const itemsPerPage = Math.floor((pageHeight - marginTop - marginBottom - 30) / lineHeight);
+      const totalPagesNeeded = Math.ceil(history.length / itemsPerPage);
+      
+      for (let page = 0; page < totalPagesNeeded; page++) {
+        const startIdx = page * itemsPerPage;
+        const endIdx = Math.min(startIdx + itemsPerPage, history.length);
+        const pageItems = history.slice(startIdx, endIdx);
+        
+        const historyContentHeight = (lineHeight * pageItems.length) + 2;
+        innerY = drawSectionBox(y, historyContentHeight, 
+          page === 0 ? "Key Event History" : `Key Event History (continued)`);
+
+        doc.setFontSize(8);
+        doc.setTextColor(55, 65, 81);
+
+        pageItems.forEach((item) => {
+          innerY = checkPageBreak(lineHeight, innerY);
+          const eventText = `${item.key} (${item.code}) - ${item.timestamp}${item.repeat ? " [REPEAT]" : ""}`;
+          const maxWidth = pageWidth - marginX * 2 - boxPadding * 2 - 8;
+          doc.text(eventText, marginX + boxPadding, innerY, {
+            maxWidth,
+          });
+          innerY += lineHeight;
+        });
+
+        y = innerY + boxPadding + sectionSpacing;
+        
+        // If there are more pages, add a new page
+        if (page < totalPagesNeeded - 1) {
+          addPage();
+          y = marginTop;
+        }
+      }
+    }
+
+    // Add page numbers to all pages
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(107, 114, 128);
+      doc.text(
+        `Page ${i} of ${totalPages}`,
+        pageWidth / 2,
+        pageHeight - 10,
+        { align: "center" }
+      );
+      doc.text(
+        "keyboardtesterpro.com",
+        pageWidth - marginX,
+        pageHeight - 10,
+        { align: "right" }
+      );
+    }
+
+    doc.save(`keyboard-test-report-${new Date().toISOString().split("T")[0]}.pdf`);
+  };
+
+  const buildTextSummary = () => {
+    const lines: string[] = [];
+    lines.push("Keyboard Tester Pro - Test Report");
+    lines.push("=".repeat(40));
+    lines.push("");
+
+    if (firstInteractionAt) {
+      lines.push(`Test Date: ${firstInteractionAt.toLocaleDateString()}`);
+      lines.push(`Test Time: ${firstInteractionAt.toLocaleTimeString()}`);
+      lines.push(`Duration: ${Math.floor(testDurationSeconds / 60)}m ${testDurationSeconds % 60}s`);
+      lines.push("");
+    }
+
+    lines.push("Keyboard summary");
+    lines.push(`- Total key presses: ${totalPresses}`);
+    lines.push(`- Max keys pressed at once: ${maxSimultaneous}`);
+    lines.push(`- Unique keys tested: ${uniqueCodes.size}`);
+
+    const topKeys = Object.entries(perKeyCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8);
+    if (topKeys.length > 0) {
+      lines.push("- Most pressed keys:");
+      topKeys.forEach(([code, count]) =>
+        lines.push(`  • ${code}: ${count} press(es)`)
+      );
+    }
+
+    lines.push("");
+    lines.push("Mouse summary");
+    if (mouseHistory.length === 0) {
+      lines.push("- No mouse clicks recorded.");
+    } else {
+      const limited = mouseHistory.slice(0, 8);
+      limited.forEach((item) =>
+        lines.push(
+          `- ${item.type} click at x=${item.x}, y=${item.y} (${item.timestamp})`
+        )
+      );
+    }
+
+    return lines.join("\n");
+  };
+
+  const handleShareReport = async () => {
+    const summary = buildTextSummary();
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Keyboard & Mouse Test Report",
+          text: summary,
+        });
+        return;
+      } catch {
+        // fall through to clipboard
+      }
+    }
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(summary);
+        // eslint-disable-next-line no-alert
+        alert("Report summary copied to clipboard.");
+      } catch {
+        // ignore
+      }
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="space-y-8">
+      <Script
+        id="faq-jsonld"
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <Script
+        id="howto-jsonld"
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+      />
+      <Script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <section className="space-y-4">
+        <h1 className="text-balance text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+          Free Online{" "}
+          <span className="whitespace-nowrap text-zinc-950">
+            Keyboard Tester
+          </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+        <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 sm:text-base">
+          Press any key on your keyboard and watch it light up in real time.
+          Keyboard Tester Pro helps you quickly find{" "}
+          <span className="font-medium text-zinc-800">
+            dead, stuck, or repeating keys
+          </span>{" "}
+          on any keyboard — no downloads, works right in your browser. Test
+          anti-ghosting, N-key rollover, and keyboard functionality instantly.
+        </p>
+      </section>
+
+      <section className="grid gap-3 text-xs text-zinc-600 sm:grid-cols-3 sm:text-sm">
+        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+            Total key presses
+          </p>
+          <p className="mt-1 text-lg font-semibold text-zinc-900 sm:text-xl">
+            {totalPresses}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+            Max keys at once
+          </p>
+          <p className="mt-1 text-lg font-semibold text-zinc-900 sm:text-xl">
+            {maxSimultaneous}
+          </p>
         </div>
-      </main>
+        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+            Keys tested
+          </p>
+          <p className="mt-1 text-lg font-semibold text-zinc-900 sm:text-xl">
+            {uniqueCodes.size} / 104
+          </p>
+        </div>
+      </section>
+
+      <section className="grid gap-4 text-xs text-zinc-600 sm:grid-cols-2 sm:text-sm">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
+          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900">
+            How to use Keyboard Tester Pro
+          </h2>
+          <ol className="space-y-2 text-xs sm:text-sm">
+            <li className="flex gap-2">
+              <span className="font-medium text-zinc-800">1.</span>
+              <span>
+                Simply start pressing keys on your physical keyboard. Each key
+                will light up on the virtual keyboard in real-time.
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span className="font-medium text-zinc-800">2.</span>
+              <span>
+                Test all keys systematically: letters, numbers, function keys,
+                modifiers, and special keys.
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span className="font-medium text-zinc-800">3.</span>
+              <span>
+                Hold multiple keys simultaneously to test anti-ghosting and
+                N-key rollover capabilities.
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span className="font-medium text-zinc-800">4.</span>
+              <span>
+                Check for stuck keys by releasing all keys and seeing if any
+                remain highlighted.
+              </span>
+            </li>
+          </ol>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
+          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900">
+            Recent key activity
+          </h2>
+          {history.length === 0 ? (
+            <p className="text-xs text-zinc-500 sm:text-sm">
+              Start typing to see a live log of your key presses here.
+            </p>
+          ) : (
+            <ul className="space-y-1.5 text-xs text-zinc-600 sm:text-[13px]">
+              {history.map((item, index) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <li key={`${item.code}-${index}`} className="flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-800">
+                      {item.key}
+                    </span>
+                    <span className="text-[11px] text-zinc-500">
+                      {item.code}
+                    </span>
+                  </span>
+                  <span className="text-[11px] text-zinc-400">
+                    {item.timestamp}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      <section className="mt-2 grid gap-4 text-xs text-zinc-600 sm:text-sm md:grid-cols-3">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-1 text-sm font-semibold text-zinc-900">
+            Diagnose stuck keys
+          </h3>
+          <p>
+            If a key doesn&apos;t release visually after you stop pressing it,
+            that&apos;s a sign of a{" "}
+            <span className="font-medium">stuck or failing switch</span>.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-1 text-sm font-semibold text-zinc-900">
+            Check gaming anti-ghosting
+          </h3>
+          <p>
+            Hold down your usual gaming combo (for example,{" "}
+            <span className="font-mono text-[11px]">W + A + Space</span>) and
+            confirm every key lights up correctly.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-1 text-sm font-semibold text-zinc-900">
+            Browser-based & private
+          </h3>
+          <p>
+            All testing happens locally in your browser. No data is sent to
+            servers, ensuring complete privacy and security.
+          </p>
+        </div>
+      </section>
+
+      {/* Advanced Gaming Tests Section */}
+      <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-semibold tracking-tight text-zinc-900 sm:text-base">
+              Advanced Gaming Tests
+            </h2>
+            <p className="mt-1 text-xs text-zinc-500 sm:text-sm">
+              Test anti-ghosting, N-key rollover, response time, and gaming combos
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setGamingTestActive(!gamingTestActive);
+              if (gamingTestActive) {
+                setSelectedCombo(null);
+                setRapidPressCount(0);
+                setRapidPressStartTime(null);
+                setLastKeyPressTime(null);
+              }
+            }}
+            className={`rounded-lg px-4 py-2 text-xs font-medium transition-colors sm:text-sm ${
+              gamingTestActive
+                ? "bg-red-100 text-red-700 hover:bg-red-200"
+                : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+            }`}
+          >
+            {gamingTestActive ? "Stop Testing" : "Start Gaming Tests"}
+          </button>
+        </div>
+
+        {gamingTestActive && (
+          <div className="space-y-4">
+            {/* N-Key Rollover Test */}
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-zinc-900">
+                N-Key Rollover Test
+              </h3>
+              <p className="mb-3 text-xs text-zinc-600 sm:text-sm">
+                Press multiple keys simultaneously to test rollover capability. Current maximum:{" "}
+                <span className="font-medium text-zinc-900">{maxSimultaneous} keys</span>.
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 rounded-lg bg-white p-3">
+                  <p className="text-xs font-medium text-zinc-500">Current Keys Pressed</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900">
+                    {pressedKeys.size} key{pressedKeys.size !== 1 ? "s" : ""}
+                  </p>
+                </div>
+                <div className="flex-1 rounded-lg bg-white p-3">
+                  <p className="text-xs font-medium text-zinc-500">Max Simultaneous</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900">
+                    {maxSimultaneous} key{maxSimultaneous !== 1 ? "s" : ""}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-2 flex items-start gap-2 text-xs text-zinc-500">
+                {maxSimultaneous >= 10 ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                    <span>Full N-key rollover detected. Excellent for competitive gaming.</span>
+                  </>
+                ) : maxSimultaneous >= 6 ? (
+                  <>
+                    <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
+                    <span>Supports 6-key rollover. Standard for most keyboards.</span>
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="h-4 w-4 shrink-0 text-red-600" />
+                    <span>Limited rollover detected. May experience ghosting in complex key combinations.</span>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Gaming Combo Tests */}
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-zinc-900">
+                Gaming Combo Tests
+              </h3>
+              <p className="mb-3 text-xs text-zinc-600 sm:text-sm">
+                Select a combo and hold all keys simultaneously. Verify all keys register correctly.
+              </p>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {Object.keys(gamingCombos).map((comboName) => {
+                  const result = comboResults[comboName];
+                  const isSelected = selectedCombo === comboName;
+                  const isPassed = result?.passed;
+                  
+                  return (
+                    <button
+                      key={comboName}
+                      type="button"
+                      onClick={() => setSelectedCombo(comboName)}
+                      className={`rounded-lg border p-2 text-xs font-medium transition-colors ${
+                        isSelected
+                          ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                          : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="truncate">{comboName}</span>
+                        {isPassed !== undefined && (
+                          isPassed ? (
+                            <Check className="h-4 w-4 shrink-0 text-emerald-600" />
+                          ) : (
+                            <X className="h-4 w-4 shrink-0 text-red-600" />
+                          )
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedCombo && comboResults[selectedCombo] && (
+                <div className="mt-3 rounded-lg bg-white p-3 text-xs">
+                  <div className="flex items-start gap-2">
+                    {comboResults[selectedCombo].passed ? (
+                      <>
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 mt-0.5" />
+                        <div>
+                          <p className="font-medium text-emerald-700">All keys registered correctly</p>
+                          <p className="mt-1 text-zinc-600">
+                            Expected: {comboResults[selectedCombo].expected.join(", ")}
+                          </p>
+                          <p className="text-zinc-600">
+                            Pressed: {comboResults[selectedCombo].keysPressed.join(", ")}
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+                        <div>
+                          <p className="font-medium text-red-700">Some keys failed to register</p>
+                          <p className="mt-1 text-zinc-600">
+                            Expected: {comboResults[selectedCombo].expected.join(", ")}
+                          </p>
+                          <p className="text-zinc-600">
+                            Pressed: {comboResults[selectedCombo].keysPressed.join(", ") || "None"}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Response Time Test */}
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-zinc-900">
+                Response Time Test
+              </h3>
+              <p className="mb-3 text-xs text-zinc-600 sm:text-sm">
+                Press keys rapidly to measure response time. Lower latency improves gaming performance.
+              </p>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <div className="rounded-lg bg-white p-3">
+                  <p className="text-xs font-medium text-zinc-500">Rapid Presses</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900">{rapidPressCount}</p>
+                </div>
+                <div className="rounded-lg bg-white p-3">
+                  <p className="text-xs font-medium text-zinc-500">Total Presses</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900">{totalPresses}</p>
+                </div>
+                <div className="rounded-lg bg-white p-3">
+                  <p className="text-xs font-medium text-zinc-500">Avg Response</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900">
+                    {rapidPressStartTime && rapidPressCount > 0
+                      ? `${Math.round((Date.now() - rapidPressStartTime) / rapidPressCount)}ms`
+                      : "—"}
+                  </p>
+                </div>
+                <div className="rounded-lg bg-white p-3">
+                  <p className="text-xs font-medium text-zinc-500">Status</p>
+                  <div className="mt-1 flex items-center gap-1.5">
+                    {rapidPressCount > 50 ? (
+                      <>
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                        <span className="text-sm font-semibold text-zinc-900">Excellent</span>
+                      </>
+                    ) : rapidPressCount > 20 ? (
+                      <>
+                        <AlertTriangle className="h-4 w-4 text-amber-600" />
+                        <span className="text-sm font-semibold text-zinc-900">Good</span>
+                      </>
+                    ) : (
+                      <span className="text-sm font-semibold text-zinc-900">Testing</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Anti-Ghosting Indicator */}
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-zinc-900">
+                Anti-Ghosting Status
+              </h3>
+              <div className="flex items-center gap-3">
+                <div className={`flex-1 rounded-lg p-3 ${
+                  maxSimultaneous >= 6
+                    ? "bg-emerald-50 border border-emerald-200"
+                    : "bg-amber-50 border border-amber-200"
+                }`}>
+                  <div className="flex items-start gap-2">
+                    {maxSimultaneous >= 6 ? (
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 mt-0.5" />
+                    ) : (
+                      <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
+                    )}
+                    <div>
+                      <p className="text-xs font-medium text-zinc-700">
+                        {maxSimultaneous >= 6
+                          ? "Anti-Ghosting: Active"
+                          : "Limited Anti-Ghosting"}
+                      </p>
+                      <p className="mt-1 text-xs text-zinc-600">
+                        {maxSimultaneous >= 10
+                          ? "Full N-key rollover detected. Ideal for competitive gaming scenarios."
+                          : maxSimultaneous >= 6
+                            ? "6-key rollover support. Suitable for most gaming applications."
+                            : "Limited rollover capability. Complex key combinations may experience ghosting."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!gamingTestActive && (
+          <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center">
+            <p className="text-sm text-zinc-600">
+              Enable gaming tests to evaluate N-key rollover, anti-ghosting, response time, and combo validation.
+            </p>
+            <p className="mt-2 text-xs text-zinc-500">
+              These tests help determine if your keyboard meets competitive gaming requirements.
+            </p>
+          </div>
+        )}
+      </section>
+
+      <AdSlot position="top" />
+
+      <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-500">
+              Keyboard visualizer
+            </h2>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setKeyboardLayout(keyboardLayout === "ANSI" ? "ISO" : "ANSI")}
+                className="rounded-md border border-zinc-300 bg-white px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-600 transition-colors hover:bg-zinc-50 sm:text-xs"
+                aria-label={`Switch to ${keyboardLayout === "ANSI" ? "ISO" : "ANSI"} layout`}
+              >
+                {keyboardLayout}
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="flex items-center gap-1.5 rounded-md border border-zinc-300 bg-white px-2.5 py-1 text-[10px] font-medium text-zinc-600 transition-colors hover:bg-zinc-50 sm:text-xs"
+                aria-label="Reset all test data"
+              >
+                <RotateCcw className="h-3 w-3" />
+                <span className="hidden sm:inline">Reset</span>
+              </button>
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+                Live · Listening to key presses
+              </span>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/80 p-3 text-center text-xs text-zinc-500 sm:text-sm">
+            This tester listens to your whole keyboard. Just{" "}
+            <span className="font-medium text-zinc-700">
+              start pressing keys
+            </span>{" "}
+            and they&apos;ll light up. Try holding multiple keys to check
+            anti-ghosting.
+          </div>
+
+          <div className="space-y-2 rounded-xl bg-zinc-900 px-3 py-3 text-xs text-zinc-200 sm:px-4 sm:py-4 sm:text-sm">
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-zinc-100">Current key</span>
+              {currentlyPressed.length > 0 ? (
+                <span className="text-[11px] text-emerald-400 sm:text-xs">
+                  {currentlyPressed.length} key
+                  {currentlyPressed.length > 1 ? "s" : ""} pressed
+                </span>
+              ) : (
+                <span className="text-[11px] text-zinc-500 sm:text-xs">
+                  Waiting for input…
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between gap-2 rounded-lg bg-zinc-800/80 px-3 py-2 sm:px-4 sm:py-3">
+              <div className="flex items-baseline gap-2">
+                <span className="text-lg font-semibold tracking-tight sm:text-2xl">
+                  {lastEvent?.key || "—"}
+                </span>
+                {lastEvent?.code && (
+                  <span className="rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-zinc-400">
+                    {lastEvent.code}
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-col items-end text-[10px] text-zinc-400">
+                <span>
+                  Location:{" "}
+                  <span className="font-medium text-zinc-100">
+                    {lastEvent ? lastEvent.location : "—"}
+                  </span>
+                </span>
+                <span>
+                  Time:{" "}
+                  <span className="font-medium text-zinc-100">
+                    {lastEvent?.timestamp || "—"}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2">
+            <Keyboard layout={keyboardLayout} />
+          </div>
+        </div>
+      </section>
+
+      <AdSlot position="bottom" />
+
+      <section className="mt-4 grid gap-4 text-xs text-zinc-600 sm:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)] sm:text-sm">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
+          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900">
+            Advanced statistics
+          </h2>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+                Unique keys tested
+              </span>
+              <span className="font-medium text-zinc-800">
+                {uniqueCodes.size} / 104
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+                Max simultaneous
+              </span>
+              <span className="font-medium text-zinc-800">
+                {maxSimultaneous} key{maxSimultaneous !== 1 ? "s" : ""}
+              </span>
+            </div>
+            <p className="text-xs text-zinc-500 sm:text-sm">
+              This shows your keyboard&apos;s{" "}
+              <span className="font-medium text-zinc-800">
+                anti-ghosting / N-key rollover
+              </span>{" "}
+              performance.
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
+          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900">
+            Most pressed keys
+          </h2>
+          {Object.keys(perKeyCounts).length === 0 ? (
+            <p className="text-xs text-zinc-500 sm:text-sm">
+              Start testing and the top keys you use will appear here as a mini
+              heatmap.
+            </p>
+          ) : (
+            <ul className="space-y-1.5">
+              {Object.entries(perKeyCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 4)
+                .map(([code, count]) => (
+                  <li
+                    key={code}
+                    className="flex items-center justify-between text-[11px] sm:text-xs"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="inline-flex min-w-[60px] items-center justify-center rounded-md bg-zinc-100 px-2 py-0.5 font-mono text-[11px] text-zinc-800">
+                        {code}
+                      </span>
+                    </span>
+                    <span className="text-zinc-500">
+                      {count} press{count > 1 ? "es" : ""}
+                    </span>
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-6">
+        <h2 className="mb-3 text-sm font-semibold tracking-tight text-zinc-900">
+          Mouse tester
+        </h2>
+        <div className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/80 p-4 text-center text-xs text-zinc-500 sm:text-sm">
+          <div
+            className="min-h-[120px] rounded-lg border-2 border-dashed border-zinc-300 bg-white p-4"
+            onClick={(event) => {
+              event.preventDefault();
+              const info: MouseEventInfo = {
+                type: "left",
+                x: event.nativeEvent.offsetX,
+                y: event.nativeEvent.offsetY,
+                timestamp: new Date().toLocaleTimeString(),
+              };
+              setLastMouseEvent(info);
+              setMouseHistory((prev) => [info, ...prev].slice(0, 10));
+            }}
+            onAuxClick={(event) => {
+              event.preventDefault();
+              const info: MouseEventInfo = {
+                type: "middle",
+                x: event.nativeEvent.offsetX,
+                y: event.nativeEvent.offsetY,
+                timestamp: new Date().toLocaleTimeString(),
+              };
+              setLastMouseEvent(info);
+              setMouseHistory((prev) => [info, ...prev].slice(0, 10));
+            }}
+            onContextMenu={(event) => {
+              event.preventDefault();
+              const info: MouseEventInfo = {
+                type: "right",
+                x: event.nativeEvent.offsetX,
+                y: event.nativeEvent.offsetY,
+                timestamp: new Date().toLocaleTimeString(),
+              };
+              setLastMouseEvent(info);
+              setMouseHistory((prev) => [info, ...prev].slice(0, 10));
+            }}
+          >
+            {lastMouseEvent ? (
+              <div className="space-y-1 text-center">
+                <p className="text-xs text-zinc-600 sm:text-sm">
+                  Last click:{" "}
+                  <span className="font-medium text-zinc-900">
+                    {lastMouseEvent.type} button
+                  </span>
+                </p>
+                <p className="text-[11px] text-zinc-500 sm:text-xs">
+                  Position:{" "}
+                  <span className="font-mono text-[11px] sm:text-xs">
+                    x={lastMouseEvent.x}, y={lastMouseEvent.y}
+                  </span>{" "}
+                  · Time: {lastMouseEvent.timestamp}
+                </p>
+              </div>
+            ) : (
+              <span>Click anywhere in this area to start testing your mouse.</span>
+            )}
+          </div>
+          {mouseHistory.length > 0 && (
+            <div className="mt-3 text-left">
+              <p className="mb-1 text-[11px] font-medium text-zinc-700 sm:text-xs">
+                Click history ({mouseHistory.length})
+              </p>
+              <ul className="space-y-1 text-[10px] text-zinc-500 sm:text-[11px]">
+                {mouseHistory.slice(0, 5).map((item, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <li key={index} className="flex items-center justify-between">
+                    <span>
+                      {item.type} click at ({item.x}, {item.y})
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {item.timestamp}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="flex flex-wrap gap-3">
+        <button
+          type="button"
+          onClick={() => setIsReportOpen(true)}
+          className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 sm:text-sm"
+        >
+          View detailed report
+        </button>
+      </section>
+
+      {isReportOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setIsReportOpen(false)}
+        >
+          <div
+            className="w-full max-w-2xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-zinc-900">
+                Keyboard & Mouse Test Report
+              </h2>
+              <button
+                type="button"
+                onClick={() => setIsReportOpen(false)}
+                className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600"
+                aria-label="Close report"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-4 text-sm text-zinc-600">
+              <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                <h3 className="mb-2 font-semibold text-zinc-900">
+                  Session summary
+                </h3>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-zinc-500">Total presses:</span>{" "}
+                    <span className="font-medium text-zinc-800">
+                      {totalPresses}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500">Unique keys:</span>{" "}
+                    <span className="font-medium text-zinc-800">
+                      {uniqueCodes.size}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500">Max at once:</span>{" "}
+                    <span className="font-medium text-zinc-800">
+                      {maxSimultaneous}
+                    </span>
+                  </div>
+                  {firstInteractionAt && (
+                    <div>
+                      <span className="text-zinc-500">Duration:</span>{" "}
+                      <span className="font-medium text-zinc-800">
+                        {Math.floor(testDurationSeconds / 60)}m{" "}
+                        {testDurationSeconds % 60}s
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {Object.keys(perKeyCounts).length > 0 && (
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                  <h3 className="mb-2 font-semibold text-zinc-900">
+                    Most pressed keys
+                  </h3>
+                  <ul className="space-y-1 text-xs">
+                    {Object.entries(perKeyCounts)
+                      .sort((a, b) => b[1] - a[1])
+                      .slice(0, 8)
+                      .map(([code, count]) => (
+                        <li
+                          key={code}
+                          className="flex items-center justify-between"
+                        >
+                          <span className="font-mono text-[11px] text-zinc-700">
+                            {code}
+                          </span>
+                          <span className="text-zinc-500">
+                            {count} press{count > 1 ? "es" : ""}
+                          </span>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+
+              {mouseHistory.length > 0 && (
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                  <h3 className="mb-2 font-semibold text-zinc-900">
+                    Mouse activity
+                  </h3>
+                  <ul className="space-y-1 text-xs">
+                    {mouseHistory.slice(0, 8).map((item, index) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <li key={index} className="flex items-center justify-between">
+                        <span>
+                          {item.type} click at ({item.x}, {item.y})
+                        </span>
+                        <span className="text-zinc-400">{item.timestamp}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={handleDownloadPdf}
+                className="rounded-lg bg-zinc-900 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-zinc-800 sm:text-sm"
+              >
+                Download PDF report
+              </button>
+              <button
+                type="button"
+                onClick={handleShareReport}
+                className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 sm:text-sm"
+              >
+                Share / copy summary
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
