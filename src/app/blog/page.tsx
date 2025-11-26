@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "keyboardtesterpro blog – guides on testing keyboards and mice, diagnosing issues, and getting the most from your hardware.",
+    "keyboard tester prro blog – guides on testing keyboards and mice, diagnosing issues, and getting the most from your hardware.",
 };
 
 export default function BlogIndexPage() {

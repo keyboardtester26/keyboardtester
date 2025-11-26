@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About keyboardtesterpro - Free Online Keyboard Testing Tool",
+  title: "About keyboard tester prro - Free Online Keyboard Testing Tool",
   description:
-    "Learn about keyboardtesterpro, a free browser-based keyboard testing tool. Discover how to diagnose keyboard problems, test anti-ghosting, and verify keyboard functionality without installing software.",
+    "Learn about keyboard tester prro, a free browser-based keyboard testing tool. Discover how to diagnose keyboard problems, test anti-ghosting, and verify keyboard functionality without installing software.",
   keywords: [
     "keyboard tester about",
     "keyboard testing tool",
@@ -11,9 +11,9 @@ export const metadata: Metadata = {
     "keyboard tester information",
   ],
   openGraph: {
-    title: "About keyboardtesterpro - Free Online Keyboard Testing Tool",
+    title: "About keyboard tester prro - Free Online Keyboard Testing Tool",
     description:
-      "Learn about keyboardtesterpro, a free browser-based keyboard testing tool for diagnosing keyboard problems.",
+      "Learn about keyboard tester prro, a free browser-based keyboard testing tool for diagnosing keyboard problems.",
     type: "website",
   },
   alternates: {
@@ -30,13 +30,13 @@ export default function AboutPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboardtesterpro.com",
+        item: "https://keyboard tester prro.com",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "About",
-        item: "https://keyboardtesterpro.com/about",
+        item: "https://keyboard tester prro.com/about",
       },
     ],
   };
@@ -51,7 +51,7 @@ export default function AboutPage() {
       <div className="mx-auto max-w-3xl space-y-6">
         <header className="space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-            About keyboardtesterpro
+            About keyboard tester prro
           </h1>
           <p className="text-sm text-zinc-500">
             A minimal, focused tool for testing every key on your keyboard.
@@ -63,7 +63,7 @@ export default function AboutPage() {
             Why this tool exists
           </h2>
           <p>
-            keyboardtesterpro was created to solve a simple problem: quickly
+            keyboard tester prro was created to solve a simple problem: quickly
             confirm whether a keyboard is working properly without installing any
             software. It runs entirely in your browser and supports laptop
             keyboards, desktop keyboards, and gaming keyboards.
@@ -103,7 +103,7 @@ export default function AboutPage() {
             Feedback & improvements
           </h2>
           <p>
-            If you have suggestions for improving keyboardtesterpro—such as
+            If you have suggestions for improving keyboard tester prro—such as
             adding more layouts, languages, or testing modes—feel free to reach
             out through the{" "}
             <a href="/contact" className="font-medium text-zinc-900 underline">

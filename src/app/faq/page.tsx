@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Keyboard Tester FAQ - Frequently Asked Questions",
   description:
-    "Frequently asked questions about keyboardtesterpro: how it works, privacy, anti-ghosting testing, cross-platform support, and troubleshooting keyboard issues. Get answers to common questions.",
+    "Frequently asked questions about keyboard tester prro: how it works, privacy, anti-ghosting testing, cross-platform support, and troubleshooting keyboard issues. Get answers to common questions.",
   keywords: [
     "keyboard tester FAQ",
     "keyboard testing questions",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Keyboard Tester FAQ - Frequently Asked Questions",
     description:
-      "Get answers to common questions about keyboardtesterpro, how it works, and how to use it for diagnosing keyboard issues.",
+      "Get answers to common questions about keyboard tester prro, how it works, and how to use it for diagnosing keyboard issues.",
     type: "website",
   },
   alternates: {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 const faqs = [
   {
-    question: "How does keyboardtesterpro work?",
+    question: "How does keyboard tester prro work?",
     answer:
       "The tester listens to keyboard events directly from your browser. When you press a key, we detect the event and highlight the matching key on the visual layout. No installation or extra software is required.",
   },
@@ -45,7 +45,7 @@ const faqs = [
   {
     question: "Does it work on Mac, Windows, and Linux?",
     answer:
-      "Yes. keyboardtesterpro runs in the browser and works across most modern operating systems: Windows, macOS, and popular Linux distributions.",
+      "Yes. keyboard tester prro runs in the browser and works across most modern operating systems: Windows, macOS, and popular Linux distributions.",
   },
 ];
 
@@ -71,13 +71,13 @@ export default function FAQPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboardtesterpro.com",
+        item: "https://keyboard tester prro.com",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "FAQ",
-        item: "https://keyboardtesterpro.com/faq",
+        item: "https://keyboard tester prro.com/faq",
       },
     ],
   };

@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "keyboardtesterpro - Free Online Keyboard Tester",
-    short_name: "keyboardtesterpro",
+    name: "keyboard tester prro - Free Online Keyboard Tester",
+    short_name: "keyboard tester prro",
     description:
       "Free online keyboard tester to check every key, detect stuck keys, test anti-ghosting, and diagnose keyboard problems. Works on Windows, Mac, and Linux.",
     start_url: "/",

@@ -17,13 +17,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://keyboardtesterpro.com";
+const siteUrl = "https://keyboard tester prro.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "keyboardtesterpro – Free Online Keyboard Tester | Test Every Key Instantly",
-    template: "%s | keyboardtesterpro",
+    default: "keyboard tester prro – Free Online Keyboard Tester | Test Every Key Instantly",
+    template: "%s | keyboard tester prro",
   },
   description:
     "Free online keyboard tester to check every key, detect stuck keys, test anti-ghosting, and diagnose keyboard problems. Works on Windows, Mac, and Linux. No download required.",
@@ -54,9 +54,9 @@ export const metadata: Metadata = {
     "keyboard testing tool",
     "keyboard diagnostic",
   ],
-  authors: [{ name: "keyboardtesterpro" }],
-  creator: "keyboardtesterpro",
-  publisher: "keyboardtesterpro",
+  authors: [{ name: "keyboard tester prro" }],
+  creator: "keyboard tester prro",
+  publisher: "keyboard tester prro",
   formatDetection: {
     email: false,
     address: false,
@@ -68,8 +68,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "keyboardtesterpro",
-    title: "keyboardtesterpro – Free Online Keyboard Tester",
+    siteName: "keyboard tester prro",
+    title: "keyboard tester prro – Free Online Keyboard Tester",
     description:
       "Test every key on your keyboard instantly. Detect stuck keys, test anti-ghosting, and diagnose keyboard issues. Works on Windows, Mac, and Linux. No download required.",
     locale: "en_US",
@@ -78,17 +78,17 @@ export const metadata: Metadata = {
         url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "keyboardtesterpro - Free Online Keyboard Testing Tool",
+        alt: "keyboard tester prro - Free Online Keyboard Testing Tool",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "keyboardtesterpro – Free Online Keyboard Tester",
+    title: "keyboard tester prro – Free Online Keyboard Tester",
     description:
       "Test every key on your keyboard instantly. Detect stuck keys, test anti-ghosting, and diagnose keyboard issues. No download required.",
     images: [`${siteUrl}/og-image.png`],
-    creator: "@keyboardtesterpro",
+    creator: "@keyboard tester prro",
   },
   robots: {
     index: true,
@@ -116,7 +116,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "keyboardtesterpro",
+    name: "keyboard tester prro",
     url: siteUrl,
     description:
       "Free online keyboard tester to check every key, detect stuck keys, test anti-ghosting, and diagnose keyboard problems. Works on Windows, Mac, and Linux.",
@@ -127,7 +127,7 @@ export default function RootLayout({
     },
     publisher: {
       "@type": "Organization",
-      name: "keyboardtesterpro",
+      name: "keyboard tester prro",
       url: siteUrl,
     },
   };
@@ -135,7 +135,7 @@ export default function RootLayout({
   const softwareApp = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "keyboardtesterpro",
+    name: "keyboard tester prro",
     applicationCategory: "UtilityApplication",
     operatingSystem: "Web Browser",
     offers: {
@@ -163,7 +163,7 @@ export default function RootLayout({
         <meta name="google-site-verification" content="Q3bszLWhBq8W7_NYQF97AQ8j0A61pDZqQEaCSa5zY04" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="keyboardtesterpro" />
+        <meta name="apple-mobile-web-app-title" content="keyboard tester prro" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -225,10 +225,10 @@ export default function RootLayout({
           <div className="min-h-screen text-zinc-900 dark:text-zinc-100">
             <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
               <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-                <a href="/" className="flex items-center gap-2 sm:gap-3" aria-label="keyboardtesterpro Home">
+                <a href="/" className="flex items-center gap-2 sm:gap-3" aria-label="keyboard tester prro Home">
                   <Image
                     src="/logo.png"
-                    alt="keyboardtesterpro"
+                    alt="keyboard tester prro"
                     width={240}
                     height={240}
                     className="h-24 w-auto sm:h-28 md:h-32 object-contain"
@@ -282,7 +282,7 @@ export default function RootLayout({
             <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80">
             <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <p className="dark:text-zinc-400">
-                © {new Date().getFullYear()} keyboardtesterpro. All rights
+                © {new Date().getFullYear()} keyboard tester prro. All rights
                 reserved.
               </p>
               <div className="flex flex-wrap items-center gap-3">

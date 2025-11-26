@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Use",
   description:
-    "Terms of use for keyboardtesterpro. Understand the rules for using this free online keyboard testing tool.",
+    "Terms of use for keyboard tester prro. Understand the rules for using this free online keyboard testing tool.",
 };
 
 export default function TermsPage() {
@@ -19,7 +19,7 @@ export default function TermsPage() {
       </header>
 
       <p className="text-sm leading-relaxed text-zinc-600">
-        By accessing or using keyboardtesterpro, you agree to the following
+        By accessing or using keyboard tester prro, you agree to the following
         terms. If you do not agree with these terms, please do not use this
         website.
       </p>
@@ -29,7 +29,7 @@ export default function TermsPage() {
           1. No warranty
         </h2>
         <p>
-          keyboardtesterpro is provided on an{" "}
+          keyboard tester prro is provided on an{" "}
           <span className="font-medium">&quot;as is&quot;</span> and{" "}
           <span className="font-medium">&quot;as available&quot;</span> basis.
           We do not make any guarantees about accuracy, availability, or
@@ -42,7 +42,7 @@ export default function TermsPage() {
           2. Acceptable use
         </h2>
         <p>
-          You agree not to misuse keyboardtesterpro, including but not
+          You agree not to misuse keyboard tester prro, including but not
           limited to: attempting to interfere with the operation of the site,
           reverse engineering, or using automated tools to scrape or overload
           our infrastructure.
@@ -65,7 +65,7 @@ export default function TermsPage() {
           4. Limitation of liability
         </h2>
         <p>
-          To the maximum extent permitted by law, keyboardtesterpro and its
+          To the maximum extent permitted by law, keyboard tester prro and its
           owners are not liable for any indirect, incidental, or consequential
           damages arising from your use of the site, including data loss,
           hardware issues, or loss of profits.
@@ -78,7 +78,7 @@ export default function TermsPage() {
         </h2>
         <p>
           We may update these terms from time to time. Your continued use of
-          keyboardtesterpro after changes are published will mean you accept
+          keyboard tester prro after changes are published will mean you accept
           the updated terms.
         </p>
       </section>
@@ -89,7 +89,7 @@ export default function TermsPage() {
         </h2>
         <p>
           If you have questions about these terms, please reach out through the
-          contact information provided on the site where keyboardtesterpro is
+          contact information provided on the site where keyboard tester prro is
           hosted.
         </p>
       </section>
