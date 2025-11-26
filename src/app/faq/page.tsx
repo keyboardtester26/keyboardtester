@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Keyboard Tester FAQ - Frequently Asked Questions",
   description:
-    "Frequently asked questions about Keyboard Tester Pro: how it works, privacy, anti-ghosting testing, cross-platform support, and troubleshooting keyboard issues. Get answers to common questions.",
+    "Frequently asked questions about keyboardtesterpro: how it works, privacy, anti-ghosting testing, cross-platform support, and troubleshooting keyboard issues. Get answers to common questions.",
   keywords: [
     "keyboard tester FAQ",
     "keyboard testing questions",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Keyboard Tester FAQ - Frequently Asked Questions",
     description:
-      "Get answers to common questions about Keyboard Tester Pro, how it works, and how to use it for diagnosing keyboard issues.",
+      "Get answers to common questions about keyboardtesterpro, how it works, and how to use it for diagnosing keyboard issues.",
     type: "website",
   },
   alternates: {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 const faqs = [
   {
-    question: "How does Keyboard Tester Pro work?",
+    question: "How does keyboardtesterpro work?",
     answer:
       "The tester listens to keyboard events directly from your browser. When you press a key, we detect the event and highlight the matching key on the visual layout. No installation or extra software is required.",
   },
@@ -45,7 +45,7 @@ const faqs = [
   {
     question: "Does it work on Mac, Windows, and Linux?",
     answer:
-      "Yes. Keyboard Tester Pro runs in the browser and works across most modern operating systems: Windows, macOS, and popular Linux distributions.",
+      "Yes. keyboardtesterpro runs in the browser and works across most modern operating systems: Windows, macOS, and popular Linux distributions.",
   },
 ];
 

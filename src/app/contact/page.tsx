@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch about Keyboard Tester Pro for feedback, bug reports, or business inquiries.",
+    "Get in touch about keyboardtesterpro for feedback, bug reports, or business inquiries.",
 };
 
 export default function ContactPage() {
@@ -14,7 +14,7 @@ export default function ContactPage() {
           Contact
         </h1>
         <p className="text-sm text-zinc-500">
-          Have feedback, found a bug, or want to talk about Keyboard Tester Pro?
+          Have feedback, found a bug, or want to talk about keyboardtesterpro?
           We&apos;d love to hear from you.
         </p>
       </header>
@@ -46,7 +46,7 @@ export default function ContactPage() {
           Response time & support
         </h2>
         <p>
-          Keyboard Tester Pro is a free tool, so response times may vary. We try
+          keyboardtesterpro is a free tool, so response times may vary. We try
           to review feedback regularly and use it to improve reliability,
           performance, and features.
         </p>

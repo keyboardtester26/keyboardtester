@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "Privacy policy for Keyboard Tester Pro. Learn how we handle data, cookies, and third‑party services like analytics and advertising.",
+    "Privacy policy for keyboardtesterpro. Learn how we handle data, cookies, and third‑party services like analytics and advertising.",
 };
 
 export default function PrivacyPage() {
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
       </header>
 
       <p className="text-sm leading-relaxed text-zinc-600">
-        Keyboard Tester Pro is designed to be a simple, browser‑based tool to
+        keyboardtesterpro is designed to be a simple, browser‑based tool to
         test your keyboard. We care about your privacy and aim to keep the
         amount of data we collect to a minimum.
       </p>
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
           1. Keyboard input
         </h2>
         <p>
-          All key presses you make inside Keyboard Tester Pro are processed{" "}
+          All key presses you make inside keyboardtesterpro are processed{" "}
           <span className="font-medium">
             locally in your browser using JavaScript
           </span>
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
           4. Advertising
         </h2>
         <p>
-          If ads are displayed on Keyboard Tester Pro, they may be served by
+          If ads are displayed on keyboardtesterpro, they may be served by
           third‑party networks. These providers may use cookies to show
           relevant ads and to limit how often you see the same advertisement.
           Please refer to the respective provider&apos;s documentation for

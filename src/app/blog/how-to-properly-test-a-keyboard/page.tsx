@@ -23,7 +23,7 @@ export default function BlogPostKeyboardTest() {
             dateModified: publishedAt,
             author: {
               "@type": "Organization",
-              name: "Keyboard Tester Pro",
+              name: "keyboardtesterpro",
             },
             description:
               "Step-by-step checklist for testing mechanical and laptop keyboards using an online keyboard tester before you rely on them every day.",
@@ -40,7 +40,7 @@ export default function BlogPostKeyboardTest() {
         <p className="text-sm text-zinc-500">
           Use this checklist with{" "}
           <a href="/" className="font-medium text-zinc-900 underline">
-            Keyboard Tester Pro
+            keyboardtesterpro
           </a>{" "}
           to quickly validate a new, used, laptop, or mechanical keyboard
           before you rely on it every day.
@@ -65,7 +65,7 @@ export default function BlogPostKeyboardTest() {
         <p>
           Open{" "}
           <a href="/" className="font-medium text-zinc-900 underline">
-            Keyboard Tester Pro
+            keyboardtesterpro
           </a>{" "}
           in your browser and make sure the tab is focused. Slowly press{" "}
           <span className="font-medium">every key once</span>, including
@@ -108,7 +108,7 @@ export default function BlogPostKeyboardTest() {
         <p>
           Hold down your usual gaming cluster, such as{" "}
           <span className="font-mono text-[11px]">W + A + S + D + Space</span>,
-          and watch the combo panel and keyboard layout in Keyboard Tester Pro.
+          and watch the combo panel and keyboard layout in keyboardtesterpro.
         </p>
         <p>
           A good gaming keyboard should register{" "}
@@ -125,7 +125,7 @@ export default function BlogPostKeyboardTest() {
         <p>
           Type a short paragraph naturally and then check the{" "}
           <span className="font-medium">statistics cards and key heatmap</span>{" "}
-          at the top of Keyboard Tester Pro. This gives you a quick sense of
+          at the top of keyboardtesterpro. This gives you a quick sense of
           which keys you use most and whether any key is dropping presses.
         </p>
       </section>
@@ -158,7 +158,7 @@ export default function BlogPostKeyboardTest() {
         <p>
           Ready to run through the steps?{" "}
           <a href="/" className="font-medium text-zinc-900 underline">
-            Open Keyboard Tester Pro
+            Open keyboardtesterpro
           </a>{" "}
           in a new tab and follow this guide side by side.
         </p>
