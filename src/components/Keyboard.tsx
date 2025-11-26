@@ -21,7 +21,7 @@ export default function Keyboard({ layout = "ANSI", showNumpad = true }: Keyboar
         <div className={showNumpad ? "flex-shrink-0 max-w-4xl" : "flex-shrink-0 max-w-4xl"}>
           <div
             id="board"
-            className="bg-zinc-100 dark:bg-zinc-800 rounded-2xl box-border py-8 px-4 pb-4 relative border border-zinc-200 dark:border-zinc-700 shadow-sm"
+            className="bg-zinc-100 dark:bg-zinc-900 rounded-2xl box-border py-8 px-4 pb-4 relative border border-zinc-200 dark:border-zinc-700 shadow-sm"
             style={{ width: 'fit-content' }}
           >
             {/* Function row */}
@@ -170,7 +170,7 @@ export default function Keyboard({ layout = "ANSI", showNumpad = true }: Keyboar
         {/* Numpad */}
         {showNumpad && (
           <div className="lg:w-64 flex-shrink-0">
-            <div className="bg-zinc-100 dark:bg-zinc-800 rounded-2xl box-border py-4 px-5 border border-zinc-200 dark:border-zinc-700 shadow-sm">
+            <div className="bg-zinc-100 dark:bg-zinc-900 rounded-2xl box-border py-4 px-5 border border-zinc-200 dark:border-zinc-700 shadow-sm">
               {/* Row 1: Del, Pause, PrtSc, Home */}
               <div className="flex mb-1 gap-1">
                 {NUMPAD[0].keys.map((key) => (

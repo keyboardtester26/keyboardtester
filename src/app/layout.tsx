@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Image from "next/image";
 import Script from "next/script";
 import { KeyboardProvider } from "@/contexts/KeyboardContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -159,6 +160,7 @@ export default function RootLayout({
         <link rel="canonical" href={siteUrl} />
         <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+        <meta name="google-site-verification" content="Q3bszLWhBq8W7_NYQF97AQ8j0A61pDZqQEaCSa5zY04" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Keyboard Tester Pro" />
@@ -224,12 +226,14 @@ export default function RootLayout({
             <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
               <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
                 <a href="/" className="flex items-center gap-2 sm:gap-3" aria-label="Keyboard Tester Pro Home">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-600 dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-300 text-sm font-semibold text-white dark:text-zinc-900 shadow-sm shadow-zinc-900/20 dark:shadow-zinc-100/20">
-                    K
-                  </span>
-                  <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-base">
-                    Keyboard Tester Pro
-                  </span>
+                  <Image
+                    src="/logo.png"
+                    alt="Keyboard Tester Pro"
+                    width={240}
+                    height={240}
+                    className="h-24 w-auto sm:h-28 md:h-32 object-contain"
+                    priority
+                  />
                 </a>
                 <nav className="flex items-center gap-3 text-xs font-medium text-zinc-600 dark:text-zinc-400 sm:gap-4" aria-label="Main navigation">
                   <a

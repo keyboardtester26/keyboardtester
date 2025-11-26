@@ -1390,31 +1390,31 @@ export default function Home() {
 
       <AdSlot position="bottom" />
 
-      <section className="mt-4 grid gap-4 text-xs text-zinc-600 sm:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)] sm:text-sm">
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
-          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900">
+      <section className="mt-4 grid gap-4 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)] sm:text-sm">
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             Advanced statistics
           </h2>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
                 Unique keys tested
               </span>
-              <span className="font-medium text-zinc-800">
+              <span className="font-medium text-zinc-800 dark:text-zinc-200">
                 {uniqueCodes.size} / 104
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
                 Max simultaneous
               </span>
-              <span className="font-medium text-zinc-800">
+              <span className="font-medium text-zinc-800 dark:text-zinc-200">
                 {maxSimultaneous} key{maxSimultaneous !== 1 ? "s" : ""}
               </span>
             </div>
-            <p className="text-xs text-zinc-500 sm:text-sm">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
               This shows your keyboard&apos;s{" "}
-              <span className="font-medium text-zinc-800">
+              <span className="font-medium text-zinc-800 dark:text-zinc-200">
                 anti-ghosting / N-key rollover
               </span>{" "}
               performance.
@@ -1422,12 +1422,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
-          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             Most pressed keys
           </h2>
           {Object.keys(perKeyCounts).length === 0 ? (
-            <p className="text-xs text-zinc-500 sm:text-sm">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
               Start testing and the top keys you use will appear here as a mini
               heatmap.
             </p>
@@ -1442,11 +1442,11 @@ export default function Home() {
                     className="flex items-center justify-between text-[11px] sm:text-xs"
                   >
                     <span className="flex items-center gap-2">
-                      <span className="inline-flex min-w-[60px] items-center justify-center rounded-md bg-zinc-100 px-2 py-0.5 font-mono text-[11px] text-zinc-800">
+                      <span className="inline-flex min-w-[60px] items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-700 px-2 py-0.5 font-mono text-[11px] text-zinc-800 dark:text-zinc-200">
                         {code}
                       </span>
                     </span>
-                    <span className="text-zinc-500">
+                    <span className="text-zinc-500 dark:text-zinc-400">
                       {count} press{count > 1 ? "es" : ""}
                     </span>
                   </li>
@@ -1456,13 +1456,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-6">
-        <h2 className="mb-3 text-sm font-semibold tracking-tight text-zinc-900">
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-6">
+        <h2 className="mb-3 text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
           Mouse tester
         </h2>
-        <div className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/80 p-4 text-center text-xs text-zinc-500 sm:text-sm">
+        <div className="rounded-xl border border-dashed border-zinc-200 dark:border-zinc-700 bg-zinc-50/80 dark:bg-zinc-900/50 p-4 text-center text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
           <div
-            className="min-h-[120px] rounded-lg border-2 border-dashed border-zinc-300 bg-white p-4"
+            className="min-h-[120px] rounded-lg border-2 border-dashed border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 p-4"
             onClick={(event) => {
               event.preventDefault();
               const info: MouseEventInfo = {
@@ -1499,13 +1499,13 @@ export default function Home() {
           >
             {lastMouseEvent ? (
               <div className="space-y-1 text-center">
-                <p className="text-xs text-zinc-600 sm:text-sm">
+                <p className="text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
                   Last click:{" "}
-                  <span className="font-medium text-zinc-900">
+                  <span className="font-medium text-zinc-900 dark:text-zinc-100">
                     {lastMouseEvent.type} button
                   </span>
                 </p>
-                <p className="text-[11px] text-zinc-500 sm:text-xs">
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 sm:text-xs">
                   Position:{" "}
                   <span className="font-mono text-[11px] sm:text-xs">
                     x={lastMouseEvent.x}, y={lastMouseEvent.y}
@@ -1514,22 +1514,22 @@ export default function Home() {
                 </p>
               </div>
             ) : (
-              <span>Click anywhere in this area to start testing your mouse.</span>
+              <span className="text-zinc-600 dark:text-zinc-400">Click anywhere in this area to start testing your mouse.</span>
             )}
           </div>
           {mouseHistory.length > 0 && (
             <div className="mt-3 text-left">
-              <p className="mb-1 text-[11px] font-medium text-zinc-700 sm:text-xs">
+              <p className="mb-1 text-[11px] font-medium text-zinc-700 dark:text-zinc-300 sm:text-xs">
                 Click history ({mouseHistory.length})
               </p>
-              <ul className="space-y-1 text-[10px] text-zinc-500 sm:text-[11px]">
+              <ul className="space-y-1 text-[10px] text-zinc-500 dark:text-zinc-400 sm:text-[11px]">
                 {mouseHistory.slice(0, 5).map((item, index) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <li key={index} className="flex items-center justify-between">
                     <span>
                       {item.type} click at ({item.x}, {item.y})
                     </span>
-                    <span className="text-[11px] text-zinc-400">
+                    <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
                       {item.timestamp}
                     </span>
                   </li>
@@ -1544,7 +1544,7 @@ export default function Home() {
         <button
           type="button"
           onClick={() => setIsReportOpen(true)}
-          className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 sm:text-sm"
+          className="rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 shadow-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-sm"
         >
           View detailed report
         </button>
@@ -1556,17 +1556,17 @@ export default function Home() {
           onClick={() => setIsReportOpen(false)}
         >
           <div
-            className="w-full max-w-2xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl"
+            className="w-full max-w-2xl rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-6 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-zinc-900">
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 Keyboard & Mouse Test Report
               </h2>
               <button
                 type="button"
                 onClick={() => setIsReportOpen(false)}
-                className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600"
+                className="rounded-lg p-1 text-zinc-400 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-600 dark:hover:text-zinc-300"
                 aria-label="Close report"
               >
                 <svg
@@ -1585,34 +1585,34 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="space-y-4 text-sm text-zinc-600">
-              <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
-                <h3 className="mb-2 font-semibold text-zinc-900">
+            <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
+              <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4">
+                <h3 className="mb-2 font-semibold text-zinc-900 dark:text-zinc-100">
                   Session summary
                 </h3>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-zinc-500">Total presses:</span>{" "}
-                    <span className="font-medium text-zinc-800">
+                    <span className="text-zinc-500 dark:text-zinc-400">Total presses:</span>{" "}
+                    <span className="font-medium text-zinc-800 dark:text-zinc-200">
                       {totalPresses}
                     </span>
                   </div>
                   <div>
-                    <span className="text-zinc-500">Unique keys:</span>{" "}
-                    <span className="font-medium text-zinc-800">
+                    <span className="text-zinc-500 dark:text-zinc-400">Unique keys:</span>{" "}
+                    <span className="font-medium text-zinc-800 dark:text-zinc-200">
                       {uniqueCodes.size}
                     </span>
                   </div>
                   <div>
-                    <span className="text-zinc-500">Max at once:</span>{" "}
-                    <span className="font-medium text-zinc-800">
+                    <span className="text-zinc-500 dark:text-zinc-400">Max at once:</span>{" "}
+                    <span className="font-medium text-zinc-800 dark:text-zinc-200">
                       {maxSimultaneous}
                     </span>
                   </div>
                   {firstInteractionAt && (
                     <div>
-                      <span className="text-zinc-500">Duration:</span>{" "}
-                      <span className="font-medium text-zinc-800">
+                      <span className="text-zinc-500 dark:text-zinc-400">Duration:</span>{" "}
+                      <span className="font-medium text-zinc-800 dark:text-zinc-200">
                         {Math.floor(testDurationSeconds / 60)}m{" "}
                         {testDurationSeconds % 60}s
                       </span>
@@ -1622,8 +1622,8 @@ export default function Home() {
               </div>
 
               {Object.keys(perKeyCounts).length > 0 && (
-                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
-                  <h3 className="mb-2 font-semibold text-zinc-900">
+                <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4">
+                  <h3 className="mb-2 font-semibold text-zinc-900 dark:text-zinc-100">
                     Most pressed keys
                   </h3>
                   <ul className="space-y-1 text-xs">
@@ -1635,10 +1635,10 @@ export default function Home() {
                           key={code}
                           className="flex items-center justify-between"
                         >
-                          <span className="font-mono text-[11px] text-zinc-700">
+                          <span className="font-mono text-[11px] text-zinc-700 dark:text-zinc-300">
                             {code}
                           </span>
-                          <span className="text-zinc-500">
+                          <span className="text-zinc-500 dark:text-zinc-400">
                             {count} press{count > 1 ? "es" : ""}
                           </span>
                         </li>
@@ -1648,8 +1648,8 @@ export default function Home() {
               )}
 
               {mouseHistory.length > 0 && (
-                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
-                  <h3 className="mb-2 font-semibold text-zinc-900">
+                <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4">
+                  <h3 className="mb-2 font-semibold text-zinc-900 dark:text-zinc-100">
                     Mouse activity
                   </h3>
                   <ul className="space-y-1 text-xs">
@@ -1659,7 +1659,7 @@ export default function Home() {
                         <span>
                           {item.type} click at ({item.x}, {item.y})
                         </span>
-                        <span className="text-zinc-400">{item.timestamp}</span>
+                        <span className="text-zinc-400 dark:text-zinc-500">{item.timestamp}</span>
                       </li>
                     ))}
                   </ul>
@@ -1671,14 +1671,14 @@ export default function Home() {
               <button
                 type="button"
                 onClick={handleDownloadPdf}
-                className="rounded-lg bg-zinc-900 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-zinc-800 sm:text-sm"
+                className="rounded-lg bg-zinc-900 dark:bg-zinc-700 px-4 py-2 text-xs font-medium text-white dark:text-zinc-100 transition-colors hover:bg-zinc-800 dark:hover:bg-zinc-600 sm:text-sm"
               >
                 Download PDF report
               </button>
               <button
                 type="button"
                 onClick={handleShareReport}
-                className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 sm:text-sm"
+                className="rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-sm"
               >
                 Share / copy summary
               </button>

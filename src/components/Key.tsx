@@ -56,7 +56,7 @@ function KeyComponent({
         ? "bg-emerald-500 dark:bg-emerald-600 border-emerald-400 dark:border-emerald-500 text-white"
         : hasBeenTested
           ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400"
-          : "bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300";
+          : "bg-white dark:bg-zinc-800/90 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300";
 
   const shadowClass = isPressed
     ? "shadow-md"
