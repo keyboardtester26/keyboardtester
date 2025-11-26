@@ -10,22 +10,22 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
           Privacy Policy
         </h1>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
           Last updated: {new Date().toLocaleDateString()}
         </p>
       </header>
 
-      <p className="text-sm leading-relaxed text-zinc-600">
+      <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
         keyboard tester prro is designed to be a simple, browser‑based tool to
         test your keyboard. We care about your privacy and aim to keep the
         amount of data we collect to a minimum.
       </p>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           1. Keyboard input
         </h2>
         <p>
@@ -38,8 +38,8 @@ export default function PrivacyPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           2. Cookies and third‑party services
         </h2>
         <p>
@@ -55,8 +55,8 @@ export default function PrivacyPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           3. Log data & device information
         </h2>
         <p>
@@ -67,8 +67,8 @@ export default function PrivacyPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           4. Advertising
         </h2>
         <p>
@@ -80,8 +80,8 @@ export default function PrivacyPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           5. Your choices
         </h2>
         <p>
@@ -92,14 +92,13 @@ export default function PrivacyPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           6. Contact
         </h2>
         <p>
           If you have any questions about this privacy policy or how your data
-          is handled, please contact us via the website where Keyboard Tester
-          Pro is hosted.
+          is handled, please contact us via the website where keyboard tester prro is hosted.
         </p>
       </section>
     </div>

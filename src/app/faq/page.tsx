@@ -71,7 +71,7 @@ export default function FAQPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboard tester prro.com",
+        item: "https://keyboardtesterpro.com",
       },
       {
         "@type": "ListItem",
@@ -96,22 +96,21 @@ export default function FAQPage() {
       />
       <div className="mx-auto max-w-3xl space-y-6">
         <header className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             Frequently Asked Questions
           </h1>
-          <p className="text-sm text-zinc-500">
-            Short answers to the most common questions about using Keyboard
-            Tester Pro.
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Short answers to the most common questions about using keyboard tester prro.
           </p>
         </header>
 
-        <section className="space-y-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
+        <section className="space-y-3 rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
           {faqs.map((item) => (
-            <div key={item.question} className="border-b border-zinc-100 pb-3 last:border-b-0 last:pb-0">
-              <h2 className="text-sm font-semibold text-zinc-900">
+            <div key={item.question} className="border-b border-zinc-100 dark:border-zinc-700 pb-3 last:border-b-0 last:pb-0">
+              <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 {item.question}
               </h2>
-              <p className="mt-1 text-sm leading-relaxed text-zinc-600">
+              <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                 {item.answer}
               </p>
             </div>

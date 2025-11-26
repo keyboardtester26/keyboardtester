@@ -30,7 +30,7 @@ export default function AboutPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboard tester prro.com",
+        item: "https://keyboardtesterpro.com",
       },
       {
         "@type": "ListItem",
@@ -50,16 +50,16 @@ export default function AboutPage() {
       />
       <div className="mx-auto max-w-3xl space-y-6">
         <header className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             About keyboard tester prro
           </h1>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
             A minimal, focused tool for testing every key on your keyboard.
           </p>
         </header>
 
-        <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-          <h2 className="text-base font-semibold text-zinc-900">
+        <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
             Why this tool exists
           </h2>
           <p>
@@ -70,8 +70,8 @@ export default function AboutPage() {
           </p>
         </section>
 
-        <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-          <h2 className="text-base font-semibold text-zinc-900">
+        <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
             What you can do with it
           </h2>
           <ul className="list-inside list-disc space-y-1.5">
@@ -86,8 +86,8 @@ export default function AboutPage() {
           </ul>
         </section>
 
-        <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-          <h2 className="text-base font-semibold text-zinc-900">
+        <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
             How it works
           </h2>
           <p>
@@ -98,15 +98,15 @@ export default function AboutPage() {
           </p>
         </section>
 
-        <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-          <h2 className="text-base font-semibold text-zinc-900">
+        <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
             Feedback & improvements
           </h2>
           <p>
             If you have suggestions for improving keyboard tester prro—such as
             adding more layouts, languages, or testing modes—feel free to reach
             out through the{" "}
-            <a href="/contact" className="font-medium text-zinc-900 underline">
+            <a href="/contact" className="font-medium text-zinc-900 dark:text-zinc-200 underline">
               contact page
             </a>
             .

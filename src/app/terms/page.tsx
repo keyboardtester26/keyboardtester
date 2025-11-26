@@ -10,22 +10,22 @@ export default function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
           Terms of Use
         </h1>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
           Last updated: {new Date().toLocaleDateString()}
         </p>
       </header>
 
-      <p className="text-sm leading-relaxed text-zinc-600">
+      <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
         By accessing or using keyboard tester prro, you agree to the following
         terms. If you do not agree with these terms, please do not use this
         website.
       </p>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           1. No warranty
         </h2>
         <p>
@@ -37,8 +37,8 @@ export default function TermsPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           2. Acceptable use
         </h2>
         <p>
@@ -49,8 +49,8 @@ export default function TermsPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           3. Third‑party links and ads
         </h2>
         <p>
@@ -60,8 +60,8 @@ export default function TermsPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           4. Limitation of liability
         </h2>
         <p>
@@ -72,8 +72,8 @@ export default function TermsPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           5. Changes to these terms
         </h2>
         <p>
@@ -83,8 +83,8 @@ export default function TermsPage() {
         </p>
       </section>
 
-      <section className="space-y-2 text-sm leading-relaxed text-zinc-600">
-        <h2 className="text-base font-semibold text-zinc-900">
+      <section className="space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           6. Contact
         </h2>
         <p>
