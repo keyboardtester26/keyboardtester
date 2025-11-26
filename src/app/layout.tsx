@@ -275,29 +275,28 @@ export default function RootLayout({
               </div>
             </header>
 
-            <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+            <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 pb-20">
               <KeyboardProvider>{children}</KeyboardProvider>
             </main>
 
-            <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80">
-            <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-              <p className="dark:text-zinc-400">
-                © {new Date().getFullYear()} keyboard tester prro. All rights
-                reserved.
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                <a href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                  Privacy Policy
-                </a>
-                <a href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                  Terms of Use
-                </a>
-                <a href="/contact" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                  Contact
-                </a>
+            <footer className="fixed bottom-0 right-0 px-4 py-3 text-xs text-zinc-500 dark:text-zinc-400 bg-transparent z-50">
+              <div className="flex flex-col items-end gap-1 text-right">
+                <p>
+                  © {new Date().getFullYear()} keyboard tester prro. All rights reserved.
+                </p>
+                <div className="flex flex-wrap items-center gap-3 justify-end">
+                  <a href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300">
+                    Privacy Policy
+                  </a>
+                  <a href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300">
+                    Terms of Use
+                  </a>
+                  <a href="/contact" className="hover:text-zinc-700 dark:hover:text-zinc-300">
+                    Contact
+                  </a>
+                </div>
               </div>
-            </div>
-          </footer>
+            </footer>
         </div>
         </ThemeProvider>
       </body>
