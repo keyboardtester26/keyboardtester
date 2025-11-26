@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import Script from "next/script";
 import { jsPDF } from "jspdf";
 import { CheckCircle2, XCircle, AlertTriangle, Check, X, RotateCcw } from "lucide-react";
@@ -48,9 +48,12 @@ export default function Home() {
   const [selectedCombo, setSelectedCombo] = useState<string | null>(null);
   const [comboResults, setComboResults] = useState<Record<string, { passed: boolean; keysPressed: string[]; expected: string[] }>>({});
   const [keyPressTimings, setKeyPressTimings] = useState<Record<string, number[]>>({});
+  // Separate counters for gaming test response time (reset when test starts)
+  const [gamingTotalPresses, setGamingTotalPresses] = useState(0);
   const [rapidPressCount, setRapidPressCount] = useState(0);
   const [rapidPressStartTime, setRapidPressStartTime] = useState<number | null>(null);
-  const [lastKeyPressTime, setLastKeyPressTime] = useState<number | null>(null);
+  const lastKeyPressTimeRef = useRef<number | null>(null);
+  const processedKeyEventRef = useRef<KeyboardEvent | null>(null);
 
   // Gaming combo presets
   const gamingCombos: Record<string, string[]> = {
@@ -86,53 +89,64 @@ export default function Home() {
         return next;
       });
       
-      // Track key press timing for response time test
-      if (gamingTestActive) {
-        setKeyPressTimings((prev) => {
-          const next = { ...prev };
-          if (!next[lastKeyEvent.code]) {
-            next[lastKeyEvent.code] = [];
-          }
-          next[lastKeyEvent.code].push(now);
-          return next;
-        });
-
-        // Rapid press test
-        if (lastKeyPressTime) {
-          const timeDiff = now - lastKeyPressTime;
-          if (timeDiff < 100) { // Less than 100ms between presses
-            setRapidPressCount((prev) => prev + 1);
-          }
-        }
-        setLastKeyPressTime(now);
-        if (!rapidPressStartTime) {
-          setRapidPressStartTime(now);
-        }
-      }
-      
       if (!firstInteractionAt) {
         setFirstInteractionAt(new Date());
       }
     }
-  }, [lastKeyEvent, pressedKeys, firstInteractionAt, gamingTestActive, lastKeyPressTime, rapidPressStartTime]);
+  }, [lastKeyEvent, pressedKeys, firstInteractionAt]);
+
+  // Separate effect for gaming test response time tracking
+  useEffect(() => {
+    // Only track when gaming test is active and we have a new key event
+    // Use ref to prevent processing the same event multiple times
+    if (gamingTestActive && lastKeyEvent && !lastKeyEvent.repeat && processedKeyEventRef.current !== lastKeyEvent) {
+      processedKeyEventRef.current = lastKeyEvent;
+      const now = Date.now();
+      
+      // Increment gaming test total presses counter (only for non-repeat events)
+      setGamingTotalPresses((prev) => prev + 1);
+      
+      setKeyPressTimings((prev) => {
+        const next = { ...prev };
+        if (!next[lastKeyEvent.code]) {
+          next[lastKeyEvent.code] = [];
+        }
+        next[lastKeyEvent.code].push(now);
+        return next;
+      });
+
+      // Rapid press test - check time difference using ref
+      if (lastKeyPressTimeRef.current !== null) {
+        const timeDiff = now - lastKeyPressTimeRef.current;
+        if (timeDiff < 100) { // Less than 100ms between presses
+          setRapidPressCount((prev) => prev + 1);
+        }
+      }
+      lastKeyPressTimeRef.current = now;
+      
+      setRapidPressStartTime((prev) => prev || now);
+    }
+  }, [gamingTestActive, lastKeyEvent]);
 
   // Check gaming combo results
   useEffect(() => {
     if (gamingTestActive && selectedCombo && gamingCombos[selectedCombo]) {
       const expectedKeys = gamingCombos[selectedCombo];
       const pressedArray = Array.from(pressedKeys);
-      const allPressed = expectedKeys.every((key) => pressedArray.includes(key));
       
-      if (pressedArray.length > 0) {
-        setComboResults((prev) => ({
-          ...prev,
-          [selectedCombo]: {
-            passed: allPressed && pressedArray.length === expectedKeys.length,
-            keysPressed: pressedArray,
-            expected: expectedKeys,
-          },
-        }));
-      }
+      // Check if all expected keys are currently pressed
+      const allExpectedPressed = expectedKeys.every((key) => pressedArray.includes(key));
+      const exactMatch = allExpectedPressed && pressedArray.length === expectedKeys.length;
+      
+      // Update results whenever pressedKeys changes (even if empty, to show current state)
+      setComboResults((prev) => ({
+        ...prev,
+        [selectedCombo]: {
+          passed: exactMatch,
+          keysPressed: pressedArray,
+          expected: expectedKeys,
+        },
+      }));
     }
   }, [pressedKeys, gamingTestActive, selectedCombo]);
 
@@ -153,9 +167,11 @@ export default function Home() {
     setSelectedCombo(null);
     setComboResults({});
     setKeyPressTimings({});
+    setGamingTotalPresses(0);
     setRapidPressCount(0);
     setRapidPressStartTime(null);
-    setLastKeyPressTime(null);
+    lastKeyPressTimeRef.current = null;
+    processedKeyEventRef.current = null;
   };
 
   const currentlyPressed = Array.from(pressedKeys.values());
@@ -482,6 +498,171 @@ export default function Home() {
     const keyboardBoxStart = y;
     y = innerY + boxPadding + sectionSpacing;
 
+    // Advanced Gaming Tests Section (always show)
+    let gamingContentHeight = lineHeight * 2; // Basic header space
+    
+    // N-key Rollover section (always show, uses maxSimultaneous from general testing)
+    gamingContentHeight += lineHeight * 3; // Title + 2 lines
+    
+    // Gaming Combo Tests section
+    if (Object.keys(comboResults).length > 0) {
+      gamingContentHeight += lineHeight * 2; // Title + header
+      Object.entries(comboResults).forEach(([comboName, result]) => {
+        gamingContentHeight += lineHeight * 3; // Combo name + expected + pressed
+      });
+    } else {
+      gamingContentHeight += lineHeight * 2; // Title + "Not performed" message
+    }
+    
+    // Response Time Test section
+    if (gamingTotalPresses > 0) {
+      gamingContentHeight += lineHeight * 5; // Title + 4 metrics
+    } else {
+      gamingContentHeight += lineHeight * 2; // Title + "Not performed" message
+    }
+    
+    // Anti-Ghosting Status section (always show, uses maxSimultaneous)
+    gamingContentHeight += lineHeight * 3; // Title + status + description
+
+      innerY = drawSectionBox(y, gamingContentHeight, "Advanced Gaming Tests");
+      
+      doc.setFontSize(9);
+      doc.setTextColor(55, 65, 81);
+      
+      // N-Key Rollover Test
+      doc.setTextColor(31, 41, 55);
+      doc.setFontSize(9);
+      doc.text("N-Key Rollover Test:", marginX + boxPadding, innerY);
+      innerY += lineHeight;
+      
+      doc.setFontSize(8);
+      doc.setTextColor(55, 65, 81);
+      doc.text(`Current Keys Pressed: ${pressedKeys.size}`, marginX + boxPadding + 4, innerY);
+      innerY += lineHeight;
+      doc.text(`Max Simultaneous: ${maxSimultaneous} key${maxSimultaneous !== 1 ? "s" : ""}`, marginX + boxPadding + 4, innerY);
+      innerY += lineHeight;
+      
+      // Status assessment
+      let rolloverStatus = "";
+      if (maxSimultaneous >= 10) {
+        rolloverStatus = "Full N-key rollover detected. Excellent for competitive gaming.";
+      } else if (maxSimultaneous >= 6) {
+        rolloverStatus = "Supports 6-key rollover. Standard for most keyboards.";
+      } else {
+        rolloverStatus = "Limited rollover detected. May experience ghosting in complex key combinations.";
+      }
+      doc.setTextColor(107, 114, 128);
+      doc.setFontSize(7);
+      const statusLines = doc.splitTextToSize(rolloverStatus, pageWidth - marginX * 2 - boxPadding * 2 - 8);
+      statusLines.forEach((line: string) => {
+        innerY = checkPageBreak(lineHeight, innerY);
+        doc.text(line, marginX + boxPadding + 4, innerY);
+        innerY += lineHeight;
+      });
+      innerY += lineHeight * 0.5;
+
+      // Gaming Combo Tests
+      doc.setTextColor(31, 41, 55);
+      doc.setFontSize(9);
+      innerY = checkPageBreak(lineHeight * 2, innerY);
+      doc.text("Gaming Combo Tests:", marginX + boxPadding, innerY);
+      innerY += lineHeight;
+      
+      if (Object.keys(comboResults).length > 0) {
+        doc.setFontSize(8);
+        Object.entries(comboResults).forEach(([comboName, result]) => {
+          innerY = checkPageBreak(lineHeight * 3, innerY);
+          doc.setTextColor(55, 65, 81);
+          const statusText = result.passed ? "PASSED" : "FAILED";
+          doc.text(`${comboName}: ${statusText}`, marginX + boxPadding + 4, innerY);
+          innerY += lineHeight;
+          
+          doc.setTextColor(107, 114, 128);
+          doc.setFontSize(7);
+          doc.text(`Expected: ${result.expected.join(", ")}`, marginX + boxPadding + 8, innerY);
+          innerY += lineHeight;
+          doc.text(`Pressed: ${result.keysPressed.length > 0 ? result.keysPressed.join(", ") : "None"}`, marginX + boxPadding + 8, innerY);
+          innerY += lineHeight;
+        });
+      } else {
+        doc.setFontSize(8);
+        doc.setTextColor(107, 114, 128);
+        doc.text("No combo tests performed during this session.", marginX + boxPadding + 4, innerY);
+        innerY += lineHeight;
+      }
+      innerY += lineHeight * 0.5;
+
+      // Response Time Test
+      doc.setTextColor(31, 41, 55);
+      doc.setFontSize(9);
+      innerY = checkPageBreak(lineHeight * 5, innerY);
+      doc.text("Response Time Test:", marginX + boxPadding, innerY);
+      innerY += lineHeight;
+      
+      if (gamingTotalPresses > 0) {
+        doc.setFontSize(8);
+        doc.setTextColor(55, 65, 81);
+        doc.text(`Rapid Presses: ${rapidPressCount}`, marginX + boxPadding + 4, innerY);
+        innerY += lineHeight;
+        doc.text(`Total Presses: ${gamingTotalPresses}`, marginX + boxPadding + 4, innerY);
+        innerY += lineHeight;
+        
+        const avgResponse = rapidPressStartTime && gamingTotalPresses > 0
+          ? Math.round((Date.now() - rapidPressStartTime) / gamingTotalPresses)
+          : 0;
+        doc.text(`Average Response: ${avgResponse}ms`, marginX + boxPadding + 4, innerY);
+        innerY += lineHeight;
+        
+        let responseStatus = "";
+        if (rapidPressCount > 50) {
+          responseStatus = "Status: Excellent";
+        } else if (rapidPressCount > 20) {
+          responseStatus = "Status: Good";
+        } else if (gamingTotalPresses > 0) {
+          responseStatus = "Status: Testing";
+        } else {
+          responseStatus = "Status: Ready";
+        }
+        doc.text(responseStatus, marginX + boxPadding + 4, innerY);
+      } else {
+        doc.setFontSize(8);
+        doc.setTextColor(107, 114, 128);
+        doc.text("Response time test not performed during this session.", marginX + boxPadding + 4, innerY);
+      }
+      innerY += lineHeight * 1.5;
+
+      // Anti-Ghosting Status
+      doc.setTextColor(31, 41, 55);
+      doc.setFontSize(9);
+      innerY = checkPageBreak(lineHeight * 3, innerY);
+      doc.text("Anti-Ghosting Status:", marginX + boxPadding, innerY);
+      innerY += lineHeight;
+      
+      doc.setFontSize(8);
+      doc.setTextColor(55, 65, 81);
+      const antiGhostingStatus = maxSimultaneous >= 6 ? "Anti-Ghosting: Active" : "Limited Anti-Ghosting";
+      doc.text(antiGhostingStatus, marginX + boxPadding + 4, innerY);
+      innerY += lineHeight;
+      
+      doc.setTextColor(107, 114, 128);
+      doc.setFontSize(7);
+      let antiGhostingDesc = "";
+      if (maxSimultaneous >= 10) {
+        antiGhostingDesc = "Full N-key rollover detected. Ideal for competitive gaming scenarios.";
+      } else if (maxSimultaneous >= 6) {
+        antiGhostingDesc = "6-key rollover support. Suitable for most gaming applications.";
+      } else {
+        antiGhostingDesc = "Limited rollover capability. Complex key combinations may experience ghosting.";
+      }
+      const descLines = doc.splitTextToSize(antiGhostingDesc, pageWidth - marginX * 2 - boxPadding * 2 - 8);
+      descLines.forEach((line: string) => {
+        innerY = checkPageBreak(lineHeight, innerY);
+        doc.text(line, marginX + boxPadding + 4, innerY);
+        innerY += lineHeight;
+      });
+
+      y = innerY + boxPadding + sectionSpacing;
+
     // Mouse Statistics Section
     if (mouseHistory.length > 0) {
       // Calculate content height for mouse section
@@ -687,16 +868,16 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <section className="space-y-4">
-        <h1 className="text-balance text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+        <h1 className="text-balance text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl">
           Free Online{" "}
-          <span className="whitespace-nowrap text-zinc-950">
+          <span className="whitespace-nowrap text-zinc-950 dark:text-zinc-50">
             Keyboard Tester
           </span>
           </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 sm:text-base">
+        <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-base">
           Press any key on your keyboard and watch it light up in real time.
           Keyboard Tester Pro helps you quickly find{" "}
-          <span className="font-medium text-zinc-800">
+          <span className="font-medium text-zinc-800 dark:text-zinc-200">
             dead, stuck, or repeating keys
           </span>{" "}
           on any keyboard — no downloads, works right in your browser. Test
@@ -704,62 +885,62 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="grid gap-3 text-xs text-zinc-600 sm:grid-cols-3 sm:text-sm">
-        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 shadow-sm sm:px-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+      <section className="grid gap-3 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-3 sm:text-sm">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
             Total key presses
           </p>
-          <p className="mt-1 text-lg font-semibold text-zinc-900 sm:text-xl">
+          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
             {totalPresses}
           </p>
         </div>
-        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 shadow-sm sm:px-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
             Max keys at once
           </p>
-          <p className="mt-1 text-lg font-semibold text-zinc-900 sm:text-xl">
+          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
             {maxSimultaneous}
           </p>
         </div>
-        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 shadow-sm sm:px-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 sm:text-xs">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
             Keys tested
           </p>
-          <p className="mt-1 text-lg font-semibold text-zinc-900 sm:text-xl">
+          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
             {uniqueCodes.size} / 104
           </p>
         </div>
       </section>
 
-      <section className="grid gap-4 text-xs text-zinc-600 sm:grid-cols-2 sm:text-sm">
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
-          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900">
+      <section className="grid gap-4 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-2 sm:text-sm">
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             How to use Keyboard Tester Pro
           </h2>
           <ol className="space-y-2 text-xs sm:text-sm">
             <li className="flex gap-2">
-              <span className="font-medium text-zinc-800">1.</span>
+              <span className="font-medium text-zinc-800 dark:text-zinc-200">1.</span>
               <span>
                 Simply start pressing keys on your physical keyboard. Each key
                 will light up on the virtual keyboard in real-time.
               </span>
             </li>
             <li className="flex gap-2">
-              <span className="font-medium text-zinc-800">2.</span>
+              <span className="font-medium text-zinc-800 dark:text-zinc-200">2.</span>
               <span>
                 Test all keys systematically: letters, numbers, function keys,
                 modifiers, and special keys.
               </span>
             </li>
             <li className="flex gap-2">
-              <span className="font-medium text-zinc-800">3.</span>
+              <span className="font-medium text-zinc-800 dark:text-zinc-200">3.</span>
               <span>
                 Hold multiple keys simultaneously to test anti-ghosting and
                 N-key rollover capabilities.
               </span>
             </li>
             <li className="flex gap-2">
-              <span className="font-medium text-zinc-800">4.</span>
+              <span className="font-medium text-zinc-800 dark:text-zinc-200">4.</span>
               <span>
                 Check for stuck keys by releasing all keys and seeing if any
                 remain highlighted.
@@ -768,28 +949,28 @@ export default function Home() {
           </ol>
         </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
-          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+          <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             Recent key activity
           </h2>
           {history.length === 0 ? (
-            <p className="text-xs text-zinc-500 sm:text-sm">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
               Start typing to see a live log of your key presses here.
             </p>
           ) : (
-            <ul className="space-y-1.5 text-xs text-zinc-600 sm:text-[13px]">
+            <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 sm:text-[13px]">
               {history.map((item, index) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <li key={`${item.code}-${index}`} className="flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-800">
+                    <span className="rounded-md bg-zinc-100 dark:bg-zinc-700 px-2 py-0.5 text-[11px] font-medium text-zinc-800 dark:text-zinc-200">
                       {item.key}
                     </span>
-                    <span className="text-[11px] text-zinc-500">
+                    <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
                       {item.code}
                     </span>
                   </span>
-                  <span className="text-[11px] text-zinc-400">
+                  <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
                     {item.timestamp}
                   </span>
                 </li>
@@ -799,9 +980,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mt-2 grid gap-4 text-xs text-zinc-600 sm:text-sm md:grid-cols-3">
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
-          <h3 className="mb-1 text-sm font-semibold text-zinc-900">
+      <section className="mt-2 grid gap-4 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm md:grid-cols-3">
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
+          <h3 className="mb-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             Diagnose stuck keys
           </h3>
           <p>
@@ -810,8 +991,8 @@ export default function Home() {
             <span className="font-medium">stuck or failing switch</span>.
           </p>
         </div>
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
-          <h3 className="mb-1 text-sm font-semibold text-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
+          <h3 className="mb-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             Check gaming anti-ghosting
           </h3>
           <p>
@@ -820,8 +1001,8 @@ export default function Home() {
             confirm every key lights up correctly.
           </p>
         </div>
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
-          <h3 className="mb-1 text-sm font-semibold text-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
+          <h3 className="mb-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             Browser-based & private
           </h3>
           <p>
@@ -832,25 +1013,37 @@ export default function Home() {
       </section>
 
       {/* Advanced Gaming Tests Section */}
-      <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-6">
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-6">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold tracking-tight text-zinc-900 sm:text-base">
+            <h2 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-base">
               Advanced Gaming Tests
             </h2>
-            <p className="mt-1 text-xs text-zinc-500 sm:text-sm">
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
               Test anti-ghosting, N-key rollover, response time, and gaming combos
             </p>
           </div>
           <button
             type="button"
             onClick={() => {
-              setGamingTestActive(!gamingTestActive);
-              if (gamingTestActive) {
+              const wasActive = gamingTestActive;
+              setGamingTestActive(!wasActive);
+              if (wasActive) {
+                // Stopping test - clear results
                 setSelectedCombo(null);
                 setRapidPressCount(0);
+                setGamingTotalPresses(0);
                 setRapidPressStartTime(null);
-                setLastKeyPressTime(null);
+                lastKeyPressTimeRef.current = null;
+                processedKeyEventRef.current = null;
+              } else {
+                // Starting test - reset counters
+                setRapidPressCount(0);
+                setGamingTotalPresses(0);
+                setRapidPressStartTime(null);
+                lastKeyPressTimeRef.current = null;
+                processedKeyEventRef.current = null;
+                setKeyPressTimings({});
               }
             }}
             className={`rounded-lg px-4 py-2 text-xs font-medium transition-colors sm:text-sm ${
@@ -866,29 +1059,29 @@ export default function Home() {
         {gamingTestActive && (
           <div className="space-y-4">
             {/* N-Key Rollover Test */}
-            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-              <h3 className="mb-2 text-sm font-semibold text-zinc-900">
+            <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 N-Key Rollover Test
               </h3>
-              <p className="mb-3 text-xs text-zinc-600 sm:text-sm">
+              <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
                 Press multiple keys simultaneously to test rollover capability. Current maximum:{" "}
-                <span className="font-medium text-zinc-900">{maxSimultaneous} keys</span>.
+                <span className="font-medium text-zinc-900 dark:text-zinc-100">{maxSimultaneous} keys</span>.
               </p>
               <div className="flex items-center gap-2">
-                <div className="flex-1 rounded-lg bg-white p-3">
-                  <p className="text-xs font-medium text-zinc-500">Current Keys Pressed</p>
-                  <p className="mt-1 text-lg font-semibold text-zinc-900">
+                <div className="flex-1 rounded-lg bg-white dark:bg-zinc-800 p-3">
+                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Current Keys Pressed</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                     {pressedKeys.size} key{pressedKeys.size !== 1 ? "s" : ""}
                   </p>
                 </div>
-                <div className="flex-1 rounded-lg bg-white p-3">
-                  <p className="text-xs font-medium text-zinc-500">Max Simultaneous</p>
-                  <p className="mt-1 text-lg font-semibold text-zinc-900">
+                <div className="flex-1 rounded-lg bg-white dark:bg-zinc-800 p-3">
+                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Max Simultaneous</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                     {maxSimultaneous} key{maxSimultaneous !== 1 ? "s" : ""}
                   </p>
                 </div>
               </div>
-              <div className="mt-2 flex items-start gap-2 text-xs text-zinc-500">
+              <div className="mt-2 flex items-start gap-2 text-xs text-zinc-500 dark:text-zinc-400">
                 {maxSimultaneous >= 10 ? (
                   <>
                     <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -909,11 +1102,11 @@ export default function Home() {
             </div>
 
             {/* Gaming Combo Tests */}
-            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-              <h3 className="mb-2 text-sm font-semibold text-zinc-900">
+            <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 Gaming Combo Tests
               </h3>
-              <p className="mb-3 text-xs text-zinc-600 sm:text-sm">
+              <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
                 Select a combo and hold all keys simultaneously. Verify all keys register correctly.
               </p>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -929,8 +1122,8 @@ export default function Home() {
                       onClick={() => setSelectedCombo(comboName)}
                       className={`rounded-lg border p-2 text-xs font-medium transition-colors ${
                         isSelected
-                          ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                          : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
+                          ? "border-emerald-500 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                          : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -948,32 +1141,45 @@ export default function Home() {
                 })}
               </div>
               {selectedCombo && comboResults[selectedCombo] && (
-                <div className="mt-3 rounded-lg bg-white p-3 text-xs">
+                <div className="mt-3 rounded-lg bg-white dark:bg-zinc-800 p-3 text-xs">
                   <div className="flex items-start gap-2">
                     {comboResults[selectedCombo].passed ? (
                       <>
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 mt-0.5" />
-                        <div>
-                          <p className="font-medium text-emerald-700">All keys registered correctly</p>
-                          <p className="mt-1 text-zinc-600">
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-500 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="font-medium text-emerald-700 dark:text-emerald-400">All keys registered correctly</p>
+                          <p className="mt-1 text-zinc-600 dark:text-zinc-400">
                             Expected: {comboResults[selectedCombo].expected.join(", ")}
                           </p>
-                          <p className="text-zinc-600">
-                            Pressed: {comboResults[selectedCombo].keysPressed.join(", ")}
-                          </p>
-                        </div>
+                          <p className="text-zinc-600 dark:text-zinc-400">
+                            Pressed: {comboResults[selectedCombo].keysPressed.join(", ") || "None"}
+          </p>
+        </div>
                       </>
                     ) : (
                       <>
-                        <XCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
-                        <div>
-                          <p className="font-medium text-red-700">Some keys failed to register</p>
-                          <p className="mt-1 text-zinc-600">
+                        <XCircle className="h-4 w-4 shrink-0 text-red-600 dark:text-red-500 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="font-medium text-red-700 dark:text-red-400">
+                            {comboResults[selectedCombo].keysPressed.length === 0
+                              ? "Press the keys simultaneously to test"
+                              : "Some keys failed to register"}
+                          </p>
+                          <p className="mt-1 text-zinc-600 dark:text-zinc-400">
                             Expected: {comboResults[selectedCombo].expected.join(", ")}
                           </p>
-                          <p className="text-zinc-600">
-                            Pressed: {comboResults[selectedCombo].keysPressed.join(", ") || "None"}
+                          <p className="text-zinc-600 dark:text-zinc-400">
+                            Pressed: {comboResults[selectedCombo].keysPressed.length > 0
+                              ? comboResults[selectedCombo].keysPressed.join(", ")
+                              : "None (hold all keys at once)"}
                           </p>
+                          {comboResults[selectedCombo].keysPressed.length > 0 && (
+                            <p className="mt-1 text-xs text-amber-600">
+                              Missing: {comboResults[selectedCombo].expected
+                                .filter((key) => !comboResults[selectedCombo].keysPressed.includes(key))
+                                .join(", ")}
+                            </p>
+                          )}
                         </div>
                       </>
                     )}
@@ -983,45 +1189,50 @@ export default function Home() {
             </div>
 
             {/* Response Time Test */}
-            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-              <h3 className="mb-2 text-sm font-semibold text-zinc-900">
+            <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 Response Time Test
               </h3>
-              <p className="mb-3 text-xs text-zinc-600 sm:text-sm">
+              <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
                 Press keys rapidly to measure response time. Lower latency improves gaming performance.
               </p>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <div className="rounded-lg bg-white p-3">
-                  <p className="text-xs font-medium text-zinc-500">Rapid Presses</p>
-                  <p className="mt-1 text-lg font-semibold text-zinc-900">{rapidPressCount}</p>
+                <div className="rounded-lg bg-white dark:bg-zinc-800 p-3">
+                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Rapid Presses</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">{rapidPressCount}</p>
                 </div>
-                <div className="rounded-lg bg-white p-3">
-                  <p className="text-xs font-medium text-zinc-500">Total Presses</p>
-                  <p className="mt-1 text-lg font-semibold text-zinc-900">{totalPresses}</p>
+                <div className="rounded-lg bg-white dark:bg-zinc-800 p-3">
+                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Presses</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">{gamingTotalPresses}</p>
                 </div>
-                <div className="rounded-lg bg-white p-3">
-                  <p className="text-xs font-medium text-zinc-500">Avg Response</p>
-                  <p className="mt-1 text-lg font-semibold text-zinc-900">
-                    {rapidPressStartTime && rapidPressCount > 0
-                      ? `${Math.round((Date.now() - rapidPressStartTime) / rapidPressCount)}ms`
+                <div className="rounded-lg bg-white dark:bg-zinc-800 p-3">
+                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Avg Response</p>
+                  <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                    {rapidPressStartTime && gamingTotalPresses > 0
+                      ? `${Math.round((Date.now() - rapidPressStartTime) / gamingTotalPresses)}ms`
                       : "—"}
                   </p>
                 </div>
-                <div className="rounded-lg bg-white p-3">
-                  <p className="text-xs font-medium text-zinc-500">Status</p>
+                <div className="rounded-lg bg-white dark:bg-zinc-800 p-3">
+                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Status</p>
                   <div className="mt-1 flex items-center gap-1.5">
                     {rapidPressCount > 50 ? (
                       <>
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                        <span className="text-sm font-semibold text-zinc-900">Excellent</span>
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-500" />
+                        <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Excellent</span>
                       </>
                     ) : rapidPressCount > 20 ? (
                       <>
-                        <AlertTriangle className="h-4 w-4 text-amber-600" />
-                        <span className="text-sm font-semibold text-zinc-900">Good</span>
+                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500" />
+                        <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Good</span>
+                      </>
+                    ) : gamingTotalPresses > 0 ? (
+                      <>
+                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500" />
+                        <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Testing</span>
                       </>
                     ) : (
-                      <span className="text-sm font-semibold text-zinc-900">Testing</span>
+                      <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Ready</span>
                     )}
                   </div>
                 </div>
@@ -1029,29 +1240,29 @@ export default function Home() {
             </div>
 
             {/* Anti-Ghosting Indicator */}
-            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-              <h3 className="mb-2 text-sm font-semibold text-zinc-900">
+            <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 Anti-Ghosting Status
               </h3>
               <div className="flex items-center gap-3">
                 <div className={`flex-1 rounded-lg p-3 ${
                   maxSimultaneous >= 6
-                    ? "bg-emerald-50 border border-emerald-200"
-                    : "bg-amber-50 border border-amber-200"
+                    ? "bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800"
+                    : "bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800"
                 }`}>
                   <div className="flex items-start gap-2">
                     {maxSimultaneous >= 6 ? (
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 mt-0.5" />
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-500 mt-0.5" />
                     ) : (
-                      <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
+                      <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-500 mt-0.5" />
                     )}
                     <div>
-                      <p className="text-xs font-medium text-zinc-700">
+                      <p className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
                         {maxSimultaneous >= 6
                           ? "Anti-Ghosting: Active"
                           : "Limited Anti-Ghosting"}
                       </p>
-                      <p className="mt-1 text-xs text-zinc-600">
+                      <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
                         {maxSimultaneous >= 10
                           ? "Full N-key rollover detected. Ideal for competitive gaming scenarios."
                           : maxSimultaneous >= 6
@@ -1067,11 +1278,11 @@ export default function Home() {
         )}
 
         {!gamingTestActive && (
-          <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center">
-            <p className="text-sm text-zinc-600">
+          <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-900/50 p-6 text-center">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
               Enable gaming tests to evaluate N-key rollover, anti-ghosting, response time, and combo validation.
             </p>
-            <p className="mt-2 text-xs text-zinc-500">
+            <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
               These tests help determine if your keyboard meets competitive gaming requirements.
             </p>
           </div>
@@ -1080,10 +1291,10 @@ export default function Home() {
 
       <AdSlot position="top" />
 
-      <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-6">
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-500">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
               Keyboard visualizer
             </h2>
             <div className="flex items-center gap-2">
@@ -1433,7 +1644,7 @@ export default function Home() {
                         </li>
                       ))}
                   </ul>
-                </div>
+        </div>
               )}
 
               {mouseHistory.length > 0 && (

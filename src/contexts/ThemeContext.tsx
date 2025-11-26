@@ -13,24 +13,46 @@ interface ThemeContextType {
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
+  // Initialize theme from HTML class or system preference
+  const getInitialTheme = (): Theme => {
+    if (typeof window === "undefined") return "light";
+    
+    // Check if dark class is already on HTML (from blocking script)
+    if (document.documentElement.classList.contains("dark")) {
+      return "dark";
+    }
+    
+    try {
+      // Check localStorage for saved theme preference
+      const savedTheme = localStorage.getItem("theme") as Theme | null;
+      if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
+        return savedTheme;
+      }
+    } catch (e) {
+      // localStorage might not be available (incognito mode, etc.)
+    }
+    
+    // Check system preference
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return prefersDark ? "dark" : "light";
+  };
+
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Check localStorage for saved theme preference
-    const savedTheme = localStorage.getItem("theme") as Theme | null;
-    if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
-      setThemeState(savedTheme);
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setThemeState(prefersDark ? "dark" : "light");
+    // Sync with HTML class on mount
+    const htmlHasDark = document.documentElement.classList.contains("dark");
+    if (htmlHasDark && theme !== "dark") {
+      setThemeState("dark");
+    } else if (!htmlHasDark && theme !== "light") {
+      setThemeState("light");
     }
   }, []);
 
   useEffect(() => {
-    // Apply theme to document immediately, even before mounted
+    // Apply theme to document
     if (typeof document !== "undefined") {
       if (theme === "dark") {
         document.documentElement.classList.add("dark");
@@ -39,8 +61,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
     }
     
+    // Save to localStorage only after mount (to avoid incognito issues)
     if (mounted && typeof window !== "undefined") {
-      localStorage.setItem("theme", theme);
+      try {
+        localStorage.setItem("theme", theme);
+      } catch (e) {
+        // localStorage might not be available, ignore
+      }
     }
   }, [theme, mounted]);
 
