@@ -270,6 +270,70 @@ export default function Home() {
       },
       {
         "@type": "Question",
+        name: "What is the difference between key rollover and anti-ghosting?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Key rollover refers to how many keys can be registered simultaneously. Anti-ghosting prevents unwanted key presses when multiple keys are pressed. A keyboard can have good rollover but poor anti-ghosting, or vice versa. Our tester checks both capabilities.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I test keyboard ghosting?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "To test keyboard ghosting, press multiple keys simultaneously (like W+A+S+D+Space+Shift). If unwanted keys register or some keys don't register, your keyboard has ghosting issues. Our keyboard tester shows exactly which keys are detected, making it easy to identify ghosting problems.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is 6-key rollover vs N-key rollover?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "6-key rollover (6KRO) means your keyboard can register up to 6 keys simultaneously. N-key rollover (NKRO) means all keys can be pressed at once. Gaming keyboards often support NKRO, while standard keyboards typically support 6KRO. Use our key rollover tester to check your keyboard's capabilities.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I test if my keyboard is good for gaming?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Test your keyboard for gaming by checking: 1) Key rollover - press multiple keys simultaneously (WASD + Space + Shift), 2) Anti-ghosting - ensure all keys register correctly, 3) Response time - test rapid key presses, 4) All keys work - test every key individually. Our gaming keyboard tester checks all these features.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can I test a mechanical keyboard online?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, our online keyboard tester works with all keyboard types including mechanical keyboards, membrane keyboards, scissor-switch keyboards, and laptop keyboards. Simply connect your mechanical keyboard and start testing. No software installation required.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I know if my keyboard has N-key rollover?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "To test if your keyboard has N-key rollover, press as many keys as possible simultaneously using our key rollover tester. If all keys register correctly, your keyboard supports N-key rollover. Most gaming keyboards support NKRO, while standard keyboards typically support 6-key rollover.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What causes keyboard ghosting?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Keyboard ghosting occurs due to the matrix circuit design in keyboards. When certain key combinations are pressed, electrical conflicts can cause unwanted keys to register. Anti-ghosting technology prevents this by using diodes or more sophisticated circuitry. Test your keyboard's ghosting with our online tester.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Is this keyboard tester safe and private?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, our keyboard tester is completely safe and private. All key presses are processed locally in your browser. No data is sent to servers, stored, or recorded. Your keystrokes remain completely private and secure. The tool works entirely offline after the initial page load.",
+        },
+      },
+      {
+        "@type": "Question",
         name: "How do I know if a key is stuck?",
         acceptedAnswer: {
           "@type": "Answer",
@@ -914,13 +978,55 @@ export default function Home() {
         </h2>
         <div className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
           <p>
-            A <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover test</strong> checks how many keys your keyboard can register simultaneously. This is crucial for gaming, where you often need to press multiple keys at once (like W+A+S+D+Space+Shift).
+            A <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover test</strong> checks how many keys your keyboard can register simultaneously. This is crucial for gaming, where you often need to press multiple keys at once (like W+A+S+D+Space+Shift). Professional typists and programmers also benefit from keyboards with high rollover capabilities.
           </p>
           <p>
-            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N-key rollover (NKRO)</strong> means your keyboard can register all keys pressed at the same time. Most gaming keyboards support at least 6-key rollover, while premium models offer full N-key rollover.
+            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N-key rollover (NKRO)</strong> means your keyboard can register all keys pressed at the same time. Most gaming keyboards support at least 6-key rollover, while premium models offer full N-key rollover. Standard office keyboards typically support only 2-3 key rollover, which can cause issues when typing quickly or gaming.
           </p>
           <p>
-            Use our free <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover tester</strong> to test your keyboard's capabilities. Simply press multiple keys simultaneously and see which ones register. This helps identify if your keyboard supports the key combinations you need for gaming or professional work.
+            Use our free <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover tester</strong> to test your keyboard's capabilities. Simply press multiple keys simultaneously and see which ones register. This helps identify if your keyboard supports the key combinations you need for gaming or professional work. Our tool works with mechanical keyboards, membrane keyboards, and laptop keyboards.
+          </p>
+        </div>
+      </section>
+
+      {/* SEO Content Section - Anti-Ghosting */}
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+        <h2 className="mb-3 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-xl">
+          Understanding Anti-Ghosting and Keyboard Ghosting
+        </h2>
+        <div className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <p>
+            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">Keyboard ghosting</strong> occurs when pressing certain key combinations causes unwanted key presses to register. This happens because keyboards use a matrix circuit, and some combinations can create electrical conflicts. Anti-ghosting technology prevents these false key presses.
+          </p>
+          <p>
+            Gaming keyboards typically feature <strong className="font-semibold text-zinc-900 dark:text-zinc-100">full anti-ghosting</strong>, meaning all keys can be pressed simultaneously without conflicts. Standard keyboards may only have anti-ghosting for specific key combinations, usually around the WASD area for gaming.
+          </p>
+          <p>
+            Test your keyboard's anti-ghosting capabilities using our online keyboard tester. Try pressing complex combinations like W+A+S+D+Space+Shift+Ctrl. If all keys register correctly, your keyboard has good anti-ghosting. If some keys don't register or false keys appear, your keyboard may have ghosting issues.
+          </p>
+        </div>
+      </section>
+
+      {/* SEO Content Section - Gaming Keyboard Testing */}
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+        <h2 className="mb-3 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-xl">
+          Why Test Your Gaming Keyboard?
+        </h2>
+        <div className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <p>
+            Gaming keyboards require <strong className="font-semibold text-zinc-900 dark:text-zinc-100">high-performance features</strong> like N-key rollover, anti-ghosting, and fast response times. A keyboard that fails during intense gaming sessions can cost you matches and affect your performance.
+          </p>
+          <p>
+            Before purchasing a new gaming keyboard or troubleshooting issues with your current one, use our keyboard tester to verify:
+          </p>
+          <ul className="list-inside list-disc space-y-2 ml-2">
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Key rollover capabilities</strong> - Can it handle complex key combinations?</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Anti-ghosting performance</strong> - Do all keys register correctly when pressed together?</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Individual key functionality</strong> - Are all keys working properly?</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Response time</strong> - How quickly does the keyboard register key presses?</li>
+          </ul>
+          <p>
+            Our free online keyboard tester works with all keyboard types including mechanical keyboards, membrane keyboards, RGB gaming keyboards, and wireless keyboards. No software installation required - test directly in your web browser.
           </p>
         </div>
       </section>
@@ -1027,7 +1133,7 @@ export default function Home() {
           <p>
             If a key doesn&apos;t release visually after you stop pressing it,
             that&apos;s a sign of a{" "}
-            <span className="font-medium">stuck or failing switch</span>.
+            <span className="font-medium">stuck or failing switch</span>. Learn more about <a href="/faq" className="text-emerald-600 dark:text-emerald-400 hover:underline">keyboard troubleshooting</a>.
           </p>
         </div>
         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
@@ -1037,7 +1143,7 @@ export default function Home() {
           <p>
             Hold down your usual gaming combo (for example,{" "}
             <span className="font-mono text-[11px]">W + A + Space</span>) and
-            confirm every key lights up correctly.
+            confirm every key lights up correctly. Perfect for <a href="/blog/how-to-properly-test-a-keyboard" className="text-emerald-600 dark:text-emerald-400 hover:underline">testing gaming keyboards</a>.
           </p>
         </div>
         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
@@ -1046,7 +1152,7 @@ export default function Home() {
           </h3>
           <p>
             All testing happens locally in your browser. No data is sent to
-            servers, ensuring complete privacy and security.
+            servers, ensuring complete privacy and security. Read our <a href="/privacy" className="text-emerald-600 dark:text-emerald-400 hover:underline">privacy policy</a> for details.
           </p>
         </div>
       </section>

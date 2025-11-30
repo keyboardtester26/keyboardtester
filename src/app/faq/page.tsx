@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Keyboard Tester FAQ - Frequently Asked Questions",
+  title: "Keyboard Tester FAQ - Frequently Asked Questions | Key Rollover Test Questions",
   description:
-    "Frequently asked questions about keyboard tester prro: how it works, privacy, anti-ghosting testing, cross-platform support, and troubleshooting keyboard issues. Get answers to common questions.",
+    "Frequently asked questions about keyboard tester prro and key rollover test: how it works, privacy, anti-ghosting testing, N-key rollover, cross-platform support, and troubleshooting keyboard issues. Get answers to common questions about keyboard testing.",
   keywords: [
     "keyboard tester FAQ",
     "keyboard testing questions",
     "keyboard tester help",
     "keyboard diagnostic FAQ",
+    "key rollover test FAQ",
+    "keyboard tester questions",
+    "keyboard test help",
   ],
   openGraph: {
     title: "Keyboard Tester FAQ - Frequently Asked Questions",

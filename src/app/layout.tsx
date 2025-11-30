@@ -237,7 +237,7 @@ export default function RootLayout({
                 <a href="/" className="flex items-center gap-2 sm:gap-3" aria-label="keyboard tester prro Home">
                   <Image
                     src="/logo.png"
-                    alt="keyboard tester prro"
+                    alt="keyboard tester prro - Free Online Keyboard Tester and Key Rollover Test Tool"
                     width={240}
                     height={240}
                     className="h-24 w-auto sm:h-28 md:h-32 object-contain"

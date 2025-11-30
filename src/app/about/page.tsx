@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About keyboard tester prro - Free Online Keyboard Testing Tool",
+  title: "About keyboard tester prro - Free Online Keyboard Testing Tool & Key Rollover Tester",
   description:
-    "Learn about keyboard tester prro, a free browser-based keyboard testing tool. Discover how to diagnose keyboard problems, test anti-ghosting, and verify keyboard functionality without installing software.",
+    "Learn about keyboard tester prro, a free browser-based keyboard testing tool and key rollover tester. Discover how to diagnose keyboard problems, test anti-ghosting, N-key rollover, and verify keyboard functionality without installing software. Perfect for gaming keyboards and mechanical keyboards.",
   keywords: [
     "keyboard tester about",
     "keyboard testing tool",
     "online keyboard diagnostic",
     "keyboard tester information",
+    "key rollover tester",
+    "keyboard test tool",
+    "gaming keyboard tester",
+    "mechanical keyboard test",
   ],
   openGraph: {
     title: "About keyboard tester prro - Free Online Keyboard Testing Tool",

@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How to Properly Test a Keyboard Before You Trust It",
+  title: "How to Properly Test a Keyboard Before You Trust It | Key Rollover Test Guide",
   description:
-    "Step-by-step guide to test any keyboard using an online keyboard tester: check every key, detect ghosting, and verify real-world typing comfort.",
+    "Step-by-step guide to test any keyboard using an online keyboard tester: check every key, perform key rollover test, detect ghosting, test N-key rollover, and verify real-world typing comfort. Perfect for gaming keyboards and mechanical keyboards.",
+  keywords: [
+    "how to test keyboard",
+    "keyboard testing guide",
+    "key rollover test guide",
+    "test gaming keyboard",
+    "keyboard diagnostic guide",
+    "mechanical keyboard test",
+    "keyboard troubleshooting",
+  ],
 };
 
 export default function BlogPostKeyboardTest() {
