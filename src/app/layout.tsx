@@ -26,8 +26,12 @@ export const metadata: Metadata = {
     template: "%s | keyboard tester prro",
   },
   description:
-    "Free online keyboard tester to check every key, detect stuck keys, test anti-ghosting, and diagnose keyboard problems. Works on Windows, Mac, and Linux. No download required.",
+    "Free online keyboard tester and key rollover test tool. Test N-key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards, mechanical keyboards, and troubleshooting stuck keys. Works on Windows, Mac, and Linux. No download required.",
   keywords: [
+    "key rollover test",
+    "key rollover tester",
+    "n-key rollover test",
+    "keyboard rollover test",
     "keyboard tester",
     "online keyboard tester",
     "keyboard test",
@@ -42,7 +46,6 @@ export const metadata: Metadata = {
     "test all keyboard keys",
     "keyboard key test",
     "anti-ghosting test",
-    "n-key rollover test",
     "keyboard troubleshooting",
     "keyboard repair tool",
     "virtual keyboard tester",
@@ -53,6 +56,12 @@ export const metadata: Metadata = {
     "keyboard health check",
     "keyboard testing tool",
     "keyboard diagnostic",
+    "rollover test",
+    "n-key rollover",
+    "anti-ghosting",
+    "gaming keyboard tester",
+    "mechanical keyboard test",
+    "keyboard key rollover",
   ],
   authors: [{ name: "keyboard tester prro" }],
   creator: "keyboard tester prro",
@@ -69,9 +78,9 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "keyboard tester prro",
-    title: "keyboard tester prro – Free Online Keyboard Tester",
+    title: "keyboard tester prro – Free Key Rollover Test & Keyboard Tester",
     description:
-      "Test every key on your keyboard instantly. Detect stuck keys, test anti-ghosting, and diagnose keyboard issues. Works on Windows, Mac, and Linux. No download required.",
+      "Test N-key rollover, key rollover, and anti-ghosting instantly. Free online keyboard tester to check every key, detect stuck keys, and diagnose keyboard problems. Perfect for gaming keyboards. Works on Windows, Mac, and Linux. No download required.",
     locale: "en_US",
     images: [
       {
@@ -84,9 +93,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "keyboard tester prro – Free Online Keyboard Tester",
+    title: "keyboard tester prro – Free Key Rollover Test & Keyboard Tester",
     description:
-      "Test every key on your keyboard instantly. Detect stuck keys, test anti-ghosting, and diagnose keyboard issues. No download required.",
+      "Test N-key rollover and key rollover instantly. Free keyboard tester to check every key, detect stuck keys, and test anti-ghosting. Perfect for gaming keyboards. No download required.",
     images: [`${siteUrl}/og-image.png`],
     creator: "@keyboard tester prro",
   },
@@ -119,7 +128,7 @@ export default function RootLayout({
     name: "keyboard tester prro",
     url: siteUrl,
     description:
-      "Free online keyboard tester to check every key, detect stuck keys, test anti-ghosting, and diagnose keyboard problems. Works on Windows, Mac, and Linux.",
+      "Free online keyboard tester and key rollover test tool. Test N-key rollover, key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards and mechanical keyboards. Works on Windows, Mac, and Linux.",
     potentialAction: {
       "@type": "SearchAction",
       target: `${siteUrl}/?q={search_term_string}`,
@@ -151,7 +160,7 @@ export default function RootLayout({
       worstRating: "1",
     },
     description:
-      "Free online keyboard testing tool to check every key, detect stuck keys, test anti-ghosting, and diagnose keyboard problems.",
+      "Free online keyboard testing tool and key rollover tester. Test N-key rollover, key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards and mechanical keyboards.",
   };
 
   return (

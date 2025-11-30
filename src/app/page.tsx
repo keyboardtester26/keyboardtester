@@ -238,6 +238,30 @@ export default function Home() {
       },
       {
         "@type": "Question",
+        name: "How do I perform a key rollover test?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "To perform a key rollover test, press multiple keys simultaneously on your keyboard. Our key rollover tester will show which keys register. Try pressing common gaming combinations like W+A+S+D+Space+Shift. If all keys light up, your keyboard passes the key rollover test. This is essential for gaming keyboards.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is a key rollover tester?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "A key rollover tester is a tool that checks how many keys your keyboard can register at the same time. Our free online key rollover tester lets you test N-key rollover, anti-ghosting, and keyboard functionality instantly in your browser. Perfect for testing gaming keyboards and mechanical keyboards.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I test key rollover on my keyboard?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Use our free key rollover test tool: press multiple keys simultaneously (like WASD + Space + Shift for gaming). Watch which keys light up on the virtual keyboard. If all pressed keys register, your keyboard supports good key rollover. This test helps determine if your keyboard is suitable for gaming or fast typing.",
+        },
+      },
+      {
+        "@type": "Question",
         name: "Can I test a mechanical keyboard?",
         acceptedAnswer: {
           "@type": "Answer",
@@ -871,18 +895,34 @@ export default function Home() {
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl">
           Free Online{" "}
           <span className="whitespace-nowrap text-zinc-950 dark:text-zinc-50">
-            Keyboard Tester
+            Keyboard Tester & Key Rollover Test
           </span>
           </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-base">
-          Press any key on your keyboard and watch it light up in real time.
-          keyboard tester prro helps you quickly find{" "}
+          Test your keyboard's <span className="font-medium text-zinc-800 dark:text-zinc-200">key rollover</span>, N-key rollover, and anti-ghosting capabilities instantly. Press any key and watch it light up in real time. keyboard tester prro helps you quickly find{" "}
           <span className="font-medium text-zinc-800 dark:text-zinc-200">
             dead, stuck, or repeating keys
           </span>{" "}
-          on any keyboard — no downloads, works right in your browser. Test
-          anti-ghosting, N-key rollover, and keyboard functionality instantly.
+          on any keyboard — perfect for gaming keyboards and mechanical keyboards. No downloads required, works right in your browser.
         </p>
+      </section>
+
+      {/* SEO Content Section - Key Rollover Test */}
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+        <h2 className="mb-3 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-xl">
+          What is Key Rollover Test?
+        </h2>
+        <div className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <p>
+            A <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover test</strong> checks how many keys your keyboard can register simultaneously. This is crucial for gaming, where you often need to press multiple keys at once (like W+A+S+D+Space+Shift).
+          </p>
+          <p>
+            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N-key rollover (NKRO)</strong> means your keyboard can register all keys pressed at the same time. Most gaming keyboards support at least 6-key rollover, while premium models offer full N-key rollover.
+          </p>
+          <p>
+            Use our free <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover tester</strong> to test your keyboard's capabilities. Simply press multiple keys simultaneously and see which ones register. This helps identify if your keyboard supports the key combinations you need for gaming or professional work.
+          </p>
+        </div>
       </section>
 
       <section className="grid gap-3 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-3 sm:text-sm">
@@ -935,8 +975,7 @@ export default function Home() {
             <li className="flex gap-2">
               <span className="font-medium text-zinc-800 dark:text-zinc-200">3.</span>
               <span>
-                Hold multiple keys simultaneously to test anti-ghosting and
-                N-key rollover capabilities.
+                Perform a <strong>key rollover test</strong> by holding multiple keys simultaneously (like WASD + Space + Shift) to test anti-ghosting and N-key rollover capabilities.
               </span>
             </li>
             <li className="flex gap-2">
