@@ -32,10 +32,10 @@ export default function AdSlot({ position }: AdSlotProps) {
       aria-label={position ? `Advertisement – ${position} position` : "Advertisement"}
     >
       {/* Replace data-ad-client and data-ad-slot with your own values from AdSense */}
-      <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-2 w-full max-w-[728px]">
+      <div className="w-full max-w-[728px] min-h-[90px]">
         <ins
           className="adsbygoogle block w-full"
-          style={{ minHeight: 90 }}
+          style={{ minHeight: 90, display: "block" }}
           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
           data-ad-slot="0000000000"
           data-ad-format="auto"
