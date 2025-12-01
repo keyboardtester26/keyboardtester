@@ -45,34 +45,53 @@ export default function Settings() {
   }, [isOpen]);
 
   // Function to set light theme
-  const setLightTheme = () => {
+  const setLightTheme = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Setting light theme");
     document.documentElement.classList.remove("dark");
     setCurrentTheme("light");
     try {
       localStorage.setItem("theme", "light");
-    } catch (e) {
+    } catch (err) {
       // ignore
     }
+    // Force re-render by triggering state change
+    window.dispatchEvent(new Event("themechange"));
   };
 
   // Function to set dark theme
-  const setDarkTheme = () => {
+  const setDarkTheme = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Setting dark theme");
     document.documentElement.classList.add("dark");
     setCurrentTheme("dark");
     try {
       localStorage.setItem("theme", "dark");
-    } catch (e) {
+    } catch (err) {
       // ignore
     }
+    // Force re-render by triggering state change
+    window.dispatchEvent(new Event("themechange"));
   };
 
   // Function to set auto theme
-  const setAutoTheme = () => {
+  const setAutoTheme = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     if (prefersDark) {
-      setDarkTheme();
+      document.documentElement.classList.add("dark");
+      setCurrentTheme("dark");
     } else {
-      setLightTheme();
+      document.documentElement.classList.remove("dark");
+      setCurrentTheme("light");
+    }
+    try {
+      localStorage.setItem("theme", prefersDark ? "dark" : "light");
+    } catch (err) {
+      // ignore
     }
   };
 
@@ -116,8 +135,8 @@ export default function Settings() {
               <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
-                  onClick={setLightTheme}
-                  className={`flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors ${
+                  onClick={(e) => setLightTheme(e)}
+                  className={`flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors cursor-pointer ${
                     currentTheme === "light"
                       ? "border-emerald-500 bg-emerald-50 text-emerald-700"
                       : "border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -128,8 +147,8 @@ export default function Settings() {
                 </button>
                 <button
                   type="button"
-                  onClick={setDarkTheme}
-                  className={`flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors ${
+                  onClick={(e) => setDarkTheme(e)}
+                  className={`flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors cursor-pointer ${
                     currentTheme === "dark"
                       ? "border-emerald-500 bg-emerald-900/30 text-emerald-400"
                       : "border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -140,8 +159,8 @@ export default function Settings() {
                 </button>
                 <button
                   type="button"
-                  onClick={setAutoTheme}
-                  className="flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  onClick={(e) => setAutoTheme(e)}
+                  className="flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors cursor-pointer border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                 >
                   <Monitor className="h-4 w-4" />
                   <span>Auto</span>
