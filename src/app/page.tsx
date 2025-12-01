@@ -190,18 +190,18 @@ export default function Home() {
     mainEntity: [
       {
         "@type": "Question",
-        name: "How does keyboard tester prro work?",
+        name: "How does keyboardtesterhub work?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "keyboard tester prro listens to keyboard events in your browser. When you press a key, the matching key lights up on the virtual keyboard so you can see exactly what is being detected. All processing happens locally in your browser - no data is sent to servers.",
+          text: "keyboardtesterhub listens to keyboard events in your browser. When you press a key, the matching key lights up on the virtual keyboard so you can see exactly what is being detected. All processing happens locally in your browser - no data is sent to servers.",
         },
       },
       {
         "@type": "Question",
-        name: "Is keyboard tester prro free?",
+        name: "Is keyboardtesterhub free?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes, keyboard tester prro is completely free to use in your browser. There is no installation, signup, or payment required. You can test your keyboard as many times as you want.",
+          text: "Yes, keyboardtesterhub is completely free to use in your browser. There is no installation, signup, or payment required. You can test your keyboard as many times as you want.",
         },
       },
       {
@@ -214,10 +214,10 @@ export default function Home() {
       },
       {
         "@type": "Question",
-        name: "Does keyboard tester prro work on Mac and Windows?",
+        name: "Does keyboardtesterhub work on Mac and Windows?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes, keyboard tester prro works on all operating systems including Windows, Mac, Linux, Chrome OS, and mobile devices. It runs entirely in your web browser, so no installation is needed.",
+          text: "Yes, keyboardtesterhub works on all operating systems including Windows, Mac, Linux, Chrome OS, and mobile devices. It runs entirely in your web browser, so no installation is needed.",
         },
       },
       {
@@ -265,7 +265,7 @@ export default function Home() {
         name: "Can I test a mechanical keyboard?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes, keyboard tester prro works with all keyboard types including mechanical, membrane, scissor-switch, and laptop keyboards. The tester will show you which keys are working and which may be stuck or failing.",
+          text: "Yes, keyboardtesterhub works with all keyboard types including mechanical, membrane, scissor-switch, and laptop keyboards. The tester will show you which keys are working and which may be stuck or failing.",
         },
       },
       {
@@ -347,14 +347,14 @@ export default function Home() {
   const howToJsonLd = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to Test Your Keyboard Using keyboard tester prro",
+    name: "How to Test Your Keyboard Using keyboardtesterhub",
     description: "Step-by-step guide to testing your keyboard for stuck keys, ghosting, and functionality issues.",
     step: [
       {
         "@type": "HowToStep",
         position: 1,
-        name: "Open keyboard tester prro",
-        text: "Navigate to keyboard tester prro.com in your web browser. No installation or signup required.",
+        name: "Open keyboardtesterhub",
+        text: "Navigate to keyboardtesterhub.com in your web browser. No installation or signup required.",
       },
       {
         "@type": "HowToStep",
@@ -398,7 +398,7 @@ export default function Home() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboard tester prro.com",
+        item: "https://keyboardtesterhub.com",
       },
     ],
   };
@@ -422,12 +422,12 @@ export default function Home() {
       doc.rect(0, 0, pageWidth, headerHeight, "F");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(15);
-      doc.text("keyboard tester prro", marginX, 14);
+      doc.text("keyboardtesterhub", marginX, 14);
       doc.setFontSize(10);
       doc.text("Keyboard & Mouse Diagnostic Report", marginX, 22);
       doc.setFontSize(9);
       doc.setTextColor(226, 232, 240);
-      doc.text("keyboard tester prro.com", pageWidth - marginX, 11, {
+      doc.text("keyboardtesterhub.com", pageWidth - marginX, 11, {
         align: "right",
       });
       doc.text(`Report Date: ${new Date().toLocaleDateString()}`, pageWidth - marginX, 18, {
@@ -467,12 +467,12 @@ export default function Home() {
     doc.rect(0, 0, pageWidth, headerHeight, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(15);
-    doc.text("keyboard tester prro", marginX, 14);
+    doc.text("keyboardtesterhub", marginX, 14);
     doc.setFontSize(10);
     doc.text("Keyboard & Mouse Diagnostic Report", marginX, 22);
     doc.setFontSize(9);
     doc.setTextColor(226, 232, 240);
-    doc.text("keyboard tester prro.com", pageWidth - marginX, 11, {
+    doc.text("keyboardtesterhub.com", pageWidth - marginX, 11, {
       align: "right",
     });
     doc.text(`Report Date: ${new Date().toLocaleDateString()}`, pageWidth - marginX, 18, {
@@ -857,7 +857,7 @@ export default function Home() {
         { align: "center" }
       );
       doc.text(
-        "keyboard tester prro.com",
+        "keyboardtesterhub.com",
         pageWidth - marginX,
         pageHeight - 10,
         { align: "right" }
@@ -869,7 +869,7 @@ export default function Home() {
 
   const buildTextSummary = () => {
     const lines: string[] = [];
-    lines.push("keyboard tester prro - Test Report");
+    lines.push("keyboardtesterhub - Test Report");
     lines.push("=".repeat(40));
     lines.push("");
 
@@ -963,7 +963,7 @@ export default function Home() {
           </span>
           </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-base">
-          Test your keyboard's <span className="font-medium text-zinc-800 dark:text-zinc-200">key rollover</span>, N-key rollover, and anti-ghosting capabilities instantly. Press any key and watch it light up in real time. keyboard tester prro helps you quickly find{" "}
+          Test your keyboard's <span className="font-medium text-zinc-800 dark:text-zinc-200">key rollover</span>, N-key rollover, and anti-ghosting capabilities instantly. Press any key and watch it light up in real time. keyboardtesterhub helps you quickly find{" "}
           <span className="font-medium text-zinc-800 dark:text-zinc-200">
             dead, stuck, or repeating keys
           </span>{" "}
@@ -1061,7 +1061,7 @@ export default function Home() {
       <section className="grid gap-4 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-2 sm:text-sm">
         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
           <h2 className="mb-2 text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-            How to use keyboard tester prro
+            How to use keyboardtesterhub
           </h2>
           <ol className="space-y-2 text-xs sm:text-sm">
             <li className="flex gap-2">

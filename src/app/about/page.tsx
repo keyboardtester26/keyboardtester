@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About keyboard tester prro - Free Online Keyboard Testing Tool",
+  title: "About keyboardtesterhub - Free Online Keyboard Testing Tool",
   description:
-    "Learn about keyboard tester prro, a free browser-based keyboard testing tool. Test key rollover, anti-ghosting, response time, and verify every key works without installing software.",
+    "Learn about keyboardtesterhub, a free browser-based keyboard testing tool. Test key rollover, anti-ghosting, response time, and verify every key works without installing software.",
   keywords: [
     "keyboard tester about",
     "keyboard testing tool",
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     "free keyboard tester",
   ],
   openGraph: {
-    title: "About keyboard tester prro - Free Online Keyboard Testing Tool",
+    title: "About keyboardtesterhub - Free Online Keyboard Testing Tool",
     description:
-      "Learn about keyboard tester prro, a free browser-based keyboard testing tool for diagnosing keyboard problems.",
+      "Learn about keyboardtesterhub, a free browser-based keyboard testing tool for diagnosing keyboard problems.",
     type: "website",
   },
   alternates: {
@@ -34,13 +34,13 @@ export default function AboutPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboardtesterpro.com",
+        item: "https://keyboardtesterhub.com",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "About",
-        item: "https://keyboardtesterpro.com/about",
+        item: "https://keyboardtesterhub.com/about",
       },
     ],
   };
@@ -48,8 +48,8 @@ export default function AboutPage() {
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "keyboard tester prro",
-    url: "https://keyboardtesterpro.com",
+    name: "keyboardtesterhub",
+    url: "https://keyboardtesterhub.com",
     description: "Free online keyboard testing tool for gamers, developers, and keyboard enthusiasts.",
     foundingDate: "2024",
   };
@@ -67,7 +67,7 @@ export default function AboutPage() {
       <div className="mx-auto max-w-3xl space-y-8">
         <header className="space-y-4">
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-3xl">
-            About keyboard tester prro
+            About keyboardtesterhub
           </h1>
           <p className="text-zinc-600 dark:text-zinc-400 text-lg">
             The free, professional keyboard testing tool trusted by gamers, developers, 
@@ -86,7 +86,7 @@ export default function AboutPage() {
             of lines daily, or someone who just bought a new keyboard and wants peace of mind.
           </p>
           <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed">
-            keyboard tester prro provides comprehensive, professional-grade keyboard diagnostics 
+            keyboardtesterhub provides comprehensive, professional-grade keyboard diagnostics 
             completely free, directly in your browser, with no downloads or installations required.
           </p>
         </section>
@@ -166,7 +166,7 @@ export default function AboutPage() {
             How It Works
           </h2>
           <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed">
-            keyboard tester prro uses your browser&apos;s native keyboard event APIs to detect and 
+            keyboardtesterhub uses your browser&apos;s native keyboard event APIs to detect and 
             visualize keypresses in real-time. When you press a key, your browser tells our 
             application which key was pressed, and we display it on the virtual keyboard.
           </p>
@@ -185,7 +185,7 @@ export default function AboutPage() {
         {/* Who It's For */}
         <section className="space-y-4">
           <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-            Who Uses keyboard tester prro
+            Who Uses keyboardtesterhub
           </h2>
           
           <div className="space-y-4">
@@ -262,7 +262,7 @@ export default function AboutPage() {
             Built With Modern Technology
           </h2>
           <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed">
-            keyboard tester prro is built with Next.js and React, ensuring fast load times and 
+            keyboardtesterhub is built with Next.js and React, ensuring fast load times and 
             smooth performance. The application works on all modern browsers including Chrome, 
             Firefox, Safari, and Edge, on both desktop and mobile devices.
           </p>
@@ -279,7 +279,7 @@ export default function AboutPage() {
             Free Forever
           </h2>
           <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed">
-            keyboard tester prro is and will always be completely free to use. We believe 
+            keyboardtesterhub is and will always be completely free to use. We believe 
             essential diagnostic tools should be accessible to everyone. No accounts, no 
             subscriptions, no hidden costs.
           </p>

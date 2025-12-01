@@ -17,13 +17,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://keyboardtesterpro.com";
+const siteUrl = "https://keyboardtesterhub.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "keyboard tester prro – Free Online Keyboard Tester | Test Every Key Instantly",
-    template: "%s | keyboard tester prro",
+    default: "keyboardtesterhub – Free Online Keyboard Tester | Test Every Key Instantly",
+    template: "%s | keyboardtesterhub",
   },
   description:
     "Free online keyboard tester and key rollover test tool. Test N-key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards, mechanical keyboards, and troubleshooting stuck keys. Works on Windows, Mac, and Linux. No download required.",
@@ -63,9 +63,9 @@ export const metadata: Metadata = {
     "mechanical keyboard test",
     "keyboard key rollover",
   ],
-  authors: [{ name: "keyboard tester prro" }],
-  creator: "keyboard tester prro",
-  publisher: "keyboard tester prro",
+  authors: [{ name: "keyboardtesterhub" }],
+  creator: "keyboardtesterhub",
+  publisher: "keyboardtesterhub",
   formatDetection: {
     email: false,
     address: false,
@@ -77,8 +77,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "keyboard tester prro",
-    title: "keyboard tester prro – Free Key Rollover Test & Keyboard Tester",
+    siteName: "keyboardtesterhub",
+    title: "keyboardtesterhub – Free Key Rollover Test & Keyboard Tester",
     description:
       "Test N-key rollover, key rollover, and anti-ghosting instantly. Free online keyboard tester to check every key, detect stuck keys, and diagnose keyboard problems. Perfect for gaming keyboards. Works on Windows, Mac, and Linux. No download required.",
     locale: "en_US",
@@ -87,17 +87,17 @@ export const metadata: Metadata = {
         url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "keyboard tester prro - Free Online Keyboard Testing Tool",
+        alt: "keyboardtesterhub - Free Online Keyboard Testing Tool",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "keyboard tester prro – Free Key Rollover Test & Keyboard Tester",
+    title: "keyboardtesterhub – Free Key Rollover Test & Keyboard Tester",
     description:
       "Test N-key rollover and key rollover instantly. Free keyboard tester to check every key, detect stuck keys, and test anti-ghosting. Perfect for gaming keyboards. No download required.",
     images: [`${siteUrl}/og-image.png`],
-    creator: "@keyboard tester prro",
+    creator: "@keyboardtesterhub",
   },
   robots: {
     index: true,
@@ -125,7 +125,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
     url: siteUrl,
     description:
       "Free online keyboard tester and key rollover test tool. Test N-key rollover, key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards and mechanical keyboards. Works on Windows, Mac, and Linux.",
@@ -136,7 +136,7 @@ export default function RootLayout({
     },
     publisher: {
       "@type": "Organization",
-      name: "keyboard tester prro",
+      name: "keyboardtesterhub",
       url: siteUrl,
     },
   };
@@ -144,7 +144,7 @@ export default function RootLayout({
   const softwareApp = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
     applicationCategory: "UtilityApplication",
     operatingSystem: "Web Browser",
     offers: {
@@ -172,7 +172,7 @@ export default function RootLayout({
         <meta name="google-site-verification" content="Q3bszLWhBq8W7_NYQF97AQ8j0A61pDZqQEaCSa5zY04" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="keyboard tester prro" />
+        <meta name="apple-mobile-web-app-title" content="keyboardtesterhub" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -234,10 +234,10 @@ export default function RootLayout({
           <div className="flex min-h-screen flex-col text-zinc-900 dark:text-zinc-100">
             <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
               <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-                <a href="/" className="flex items-center gap-2 sm:gap-3" aria-label="keyboard tester prro Home">
+                <a href="/" className="flex items-center gap-2 sm:gap-3" aria-label="keyboardtesterhub Home">
                   <Image
                     src="/logo.png"
-                    alt="keyboard tester prro - Free Online Keyboard Tester and Key Rollover Test Tool"
+                    alt="keyboardtesterhub - Free Online Keyboard Tester and Key Rollover Test Tool"
                     width={240}
                     height={240}
                     className="h-24 w-auto sm:h-28 md:h-32 object-contain"
@@ -291,7 +291,7 @@ export default function RootLayout({
             <footer className="mt-auto border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80">
             <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <p className="dark:text-zinc-400">
-                © {new Date().getFullYear()} keyboard tester prro. All rights
+                © {new Date().getFullYear()} keyboardtesterhub. All rights
                 reserved.
               </p>
               <div className="flex flex-wrap items-center gap-3">

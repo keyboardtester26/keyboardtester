@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "Privacy policy for keyboard tester prro. Learn how we handle data, cookies, and third‑party services like analytics and advertising.",
+    "Privacy policy for keyboardtesterhub. Learn how we handle data, cookies, and third‑party services like analytics and advertising.",
 };
 
 export default function PrivacyPage() {
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
       </header>
 
       <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-        keyboard tester prro is designed to be a simple, browser‑based tool to
+        keyboardtesterhub is designed to be a simple, browser‑based tool to
         test your keyboard. We care about your privacy and aim to keep the
         amount of data we collect to a minimum.
       </p>
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
           1. Keyboard input
         </h2>
         <p>
-          All key presses you make inside keyboard tester prro are processed{" "}
+          All key presses you make inside keyboardtesterhub are processed{" "}
           <span className="font-medium">
             locally in your browser using JavaScript
           </span>
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
           4. Advertising
         </h2>
         <p>
-          If ads are displayed on keyboard tester prro, they may be served by
+          If ads are displayed on keyboardtesterhub, they may be served by
           third‑party networks. These providers may use cookies to show
           relevant ads and to limit how often you see the same advertisement.
           Please refer to the respective provider&apos;s documentation for
@@ -98,7 +98,7 @@ export default function PrivacyPage() {
         </h2>
         <p>
           If you have any questions about this privacy policy or how your data
-          is handled, please contact us via the website where keyboard tester prro is hosted.
+          is handled, please contact us via the website where keyboardtesterhub is hosted.
         </p>
       </section>
     </div>

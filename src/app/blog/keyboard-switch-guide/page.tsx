@@ -31,11 +31,11 @@ const jsonLd = {
     "Comprehensive guide explaining all types of mechanical keyboard switches and how to choose the right one.",
   author: {
     "@type": "Organization",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
   },
   publisher: {
     "@type": "Organization",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
   },
   datePublished: "2024-12-28",
   dateModified: "2024-12-28",

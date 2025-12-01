@@ -31,11 +31,11 @@ const jsonLd = {
     "Comprehensive guide to choosing the best ergonomic keyboard for programming, coding, and long typing sessions.",
   author: {
     "@type": "Organization",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
   },
   publisher: {
     "@type": "Organization",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
   },
   datePublished: "2024-12-20",
   dateModified: "2024-12-20",

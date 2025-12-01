@@ -30,11 +30,11 @@ const jsonLd = {
     "Comprehensive comparison between membrane and mechanical keyboards to help you make the right choice.",
   author: {
     "@type": "Organization",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
   },
   publisher: {
     "@type": "Organization",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
   },
   datePublished: "2025-01-10",
   dateModified: "2025-01-10",

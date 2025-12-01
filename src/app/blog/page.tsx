@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Keyboard Blog | Guides, Reviews & Tips | keyboard tester prro",
+  title: "Keyboard Blog | Guides, Reviews & Tips | keyboardtesterhub",
   description:
     "Expert keyboard guides covering mechanical keyboards, switch types, ergonomics, cleaning, and gaming. Learn how to choose, maintain, and test your keyboard.",
   keywords: [
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "keyboard switch comparison",
   ],
   openGraph: {
-    title: "Keyboard Blog | keyboard tester prro",
+    title: "Keyboard Blog | keyboardtesterhub",
     description:
       "Expert guides on mechanical keyboards, switches, ergonomics, and more.",
     type: "website",

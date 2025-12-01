@@ -31,11 +31,11 @@ const jsonLd = {
     "Comprehensive guide to the best mechanical keyboards for gaming, featuring expert reviews and buying advice.",
   author: {
     "@type": "Organization",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
   },
   publisher: {
     "@type": "Organization",
-    name: "keyboard tester prro",
+    name: "keyboardtesterhub",
   },
   datePublished: "2025-01-15",
   dateModified: "2025-01-15",

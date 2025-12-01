@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Keyboard Tester FAQ - Frequently Asked Questions | Key Rollover Test Questions",
   description:
-    "Frequently asked questions about keyboard tester prro and key rollover test: how it works, privacy, anti-ghosting testing, N-key rollover, cross-platform support, and troubleshooting keyboard issues. Get answers to common questions about keyboard testing.",
+    "Frequently asked questions about keyboardtesterhub and key rollover test: how it works, privacy, anti-ghosting testing, N-key rollover, cross-platform support, and troubleshooting keyboard issues. Get answers to common questions about keyboard testing.",
   keywords: [
     "keyboard tester FAQ",
     "keyboard testing questions",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Keyboard Tester FAQ - Frequently Asked Questions",
     description:
-      "Get answers to common questions about keyboard tester prro, how it works, and how to use it for diagnosing keyboard issues.",
+      "Get answers to common questions about keyboardtesterhub, how it works, and how to use it for diagnosing keyboard issues.",
     type: "website",
   },
   alternates: {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 const faqs = [
   {
-    question: "How does keyboard tester prro work?",
+    question: "How does keyboardtesterhub work?",
     answer:
       "The tester listens to keyboard events directly from your browser. When you press a key, we detect the event and highlight the matching key on the visual layout. No installation or extra software is required.",
   },
@@ -48,7 +48,7 @@ const faqs = [
   {
     question: "Does it work on Mac, Windows, and Linux?",
     answer:
-      "Yes. keyboard tester prro runs in the browser and works across most modern operating systems: Windows, macOS, and popular Linux distributions.",
+      "Yes. keyboardtesterhub runs in the browser and works across most modern operating systems: Windows, macOS, and popular Linux distributions.",
   },
 ];
 
@@ -74,13 +74,13 @@ export default function FAQPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboardtesterpro.com",
+        item: "https://keyboardtesterhub.com",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "FAQ",
-        item: "https://keyboard tester prro.com/faq",
+        item: "https://keyboardtesterhub.com/faq",
       },
     ],
   };
@@ -103,7 +103,7 @@ export default function FAQPage() {
             Frequently Asked Questions
           </h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Short answers to the most common questions about using keyboard tester prro.
+            Short answers to the most common questions about using keyboardtesterhub.
           </p>
         </header>
 
