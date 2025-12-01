@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type AdSlotProps = {
   position?: "top" | "sidebar" | "bottom" | string;
@@ -8,36 +8,66 @@ type AdSlotProps = {
 
 declare global {
   interface Window {
-    adsbygoogle?: unknown[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    adsbygoogle?: any[];
   }
 }
 
 export default function AdSlot({ position }: AdSlotProps) {
+  const [isDark, setIsDark] = useState(false);
+
   useEffect(() => {
+    // Check if dark mode is active
+    const checkDarkMode = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+
+    checkDarkMode();
+
+    // Listen for theme changes
+    const observer = new MutationObserver(() => {
+      checkDarkMode();
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    // Initialize adsense
     try {
-      if (typeof window !== "undefined") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).adsbygoogle.push({});
+      if (typeof window !== "undefined" && window.adsbygoogle) {
+        window.adsbygoogle.push({});
       }
     } catch {
-      // fail silently – ads are optional
+      // fail silently
     }
+
+    return () => observer.disconnect();
   }, []);
+
+  // Use inline styles to ensure dark mode works
+  const bgColor = isDark ? "#18181b" : "#f4f4f5";
+  const borderColor = isDark ? "#3f3f46" : "#e4e4e7";
 
   return (
     <div
       className="flex w-full justify-center my-4"
       aria-label={position ? `Advertisement – ${position} position` : "Advertisement"}
     >
-      {/* Ad container with theme-aware styling - matches keyboard container colors exactly */}
-      <div className="w-full max-w-[728px] min-h-[90px] rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700">
+      <div 
+        className="w-full max-w-[728px] min-h-[90px] rounded-lg border overflow-hidden"
+        style={{
+          backgroundColor: bgColor,
+          borderColor: borderColor,
+        }}
+      >
         <ins
           className="adsbygoogle block w-full"
           style={{ 
             minHeight: 90, 
-            display: "block"
+            display: "block",
+            backgroundColor: bgColor,
           }}
           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
           data-ad-slot="0000000000"
