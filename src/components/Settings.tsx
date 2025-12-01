@@ -1,40 +1,31 @@
 "use client";
 
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Settings as SettingsIcon, Moon, Sun, Monitor, ChevronDown } from "lucide-react";
-import { ThemeContext } from "@/contexts/ThemeContext";
-import { KeyboardContext } from "@/contexts/KeyboardContext";
 
 export default function Settings() {
-  // All hooks must be called unconditionally at the top
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [isMac, setIsMac] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<"light" | "dark">("dark");
   
-  // Check ThemeContext without throwing if not available
-  const themeContext = useContext(ThemeContext);
-  const theme = themeContext?.theme || "light";
-  
-  // Check KeyboardContext without throwing if not available
-  const keyboardContext = useContext(KeyboardContext);
-  const contextIsMac = keyboardContext?.isMac || false;
-  
-  // Detect Mac platform on client
+  // Initialize on mount
   useEffect(() => {
     setMounted(true);
-    if (typeof window !== "undefined") {
+    
+    // Detect Mac platform
+    if (typeof navigator !== "undefined") {
       const detectedMac = /Mac|iPhone|iPod|iPad/i.test(navigator.platform);
       setIsMac(detectedMac);
     }
-  }, []);
-  
-  // Update Mac detection when context changes
-  useEffect(() => {
-    if (keyboardContext?.isMac !== undefined) {
-      setIsMac(keyboardContext.isMac);
+    
+    // Get current theme from document class
+    if (typeof document !== "undefined") {
+      const isDark = document.documentElement.classList.contains("dark");
+      setCurrentTheme(isDark ? "dark" : "light");
     }
-  }, [keyboardContext?.isMac]);
+  }, []);
 
   // Handle click outside
   useEffect(() => {
@@ -53,7 +44,46 @@ export default function Settings() {
     };
   }, [isOpen]);
 
-  const finalIsMac = contextIsMac || isMac;
+  // Function to set light theme
+  const setLightTheme = () => {
+    document.documentElement.classList.remove("dark");
+    setCurrentTheme("light");
+    try {
+      localStorage.setItem("theme", "light");
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  // Function to set dark theme
+  const setDarkTheme = () => {
+    document.documentElement.classList.add("dark");
+    setCurrentTheme("dark");
+    try {
+      localStorage.setItem("theme", "dark");
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  // Function to set auto theme
+  const setAutoTheme = () => {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (prefersDark) {
+      setDarkTheme();
+    } else {
+      setLightTheme();
+    }
+  };
+
+  if (!mounted) {
+    return (
+      <div className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+        <SettingsIcon className="h-4 w-4" />
+        <span className="hidden sm:inline">Settings</span>
+      </div>
+    );
+  }
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -69,14 +99,14 @@ export default function Settings() {
         <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
-      {isOpen && mounted && (
+      {isOpen && (
         <div className="absolute right-0 top-full mt-2 w-64 rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900 z-50">
           <div className="p-3 space-y-3">
             {/* Platform Detection */}
             <div className="pb-2 border-b border-zinc-200 dark:border-zinc-700">
               <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Platform</p>
               <p className="text-sm text-zinc-900 dark:text-zinc-100">
-                {finalIsMac ? "macOS" : "Windows"}
+                {isMac ? "macOS" : "Windows"}
               </p>
             </div>
 
@@ -86,15 +116,11 @@ export default function Settings() {
               <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    if (themeContext?.setTheme) {
-                      themeContext.setTheme("light");
-                    }
-                  }}
+                  onClick={setLightTheme}
                   className={`flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors ${
-                    theme === "light"
-                      ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-600"
-                      : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                    currentTheme === "light"
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                      : "border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                   }`}
                 >
                   <Sun className="h-4 w-4" />
@@ -102,15 +128,11 @@ export default function Settings() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    if (themeContext?.setTheme) {
-                      themeContext.setTheme("dark");
-                    }
-                  }}
+                  onClick={setDarkTheme}
                   className={`flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors ${
-                    theme === "dark"
-                      ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-600"
-                      : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                    currentTheme === "dark"
+                      ? "border-emerald-500 bg-emerald-900/30 text-emerald-400"
+                      : "border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                   }`}
                 >
                   <Moon className="h-4 w-4" />
@@ -118,17 +140,8 @@ export default function Settings() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    if (themeContext?.setTheme && typeof window !== "undefined") {
-                      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-                      themeContext.setTheme(prefersDark ? "dark" : "light");
-                    }
-                  }}
-                  className={`flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors ${
-                    theme !== "light" && theme !== "dark"
-                      ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-600"
-                      : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                  }`}
+                  onClick={setAutoTheme}
+                  className="flex flex-col items-center gap-1 rounded-md border p-2 text-xs transition-colors border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                 >
                   <Monitor className="h-4 w-4" />
                   <span>Auto</span>

@@ -24,3 +24,18 @@
 .dark {
   color-scheme: dark;
 }
+
+/* Force AdSense ins element to be transparent and respect dark mode */
+.adsbygoogle {
+  background-color: transparent !important;
+}
+
+.dark .adsbygoogle,
+.dark .adsbygoogle * {
+  background-color: transparent !important;
+}
+
+/* AdSlot container dark mode */
+.dark .adsbygoogle iframe {
+  background-color: transparent !important;
+}

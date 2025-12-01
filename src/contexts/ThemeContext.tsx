@@ -52,13 +52,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Apply theme to document
+    // Apply theme to document immediately
     if (typeof document !== "undefined") {
+      const html = document.documentElement;
       if (theme === "dark") {
-        document.documentElement.classList.add("dark");
+        html.classList.add("dark");
       } else {
-        document.documentElement.classList.remove("dark");
+        html.classList.remove("dark");
       }
+      
+      // Force a reflow to ensure styles apply
+      void html.offsetHeight;
     }
     
     // Save to localStorage only after mount (to avoid incognito issues)
