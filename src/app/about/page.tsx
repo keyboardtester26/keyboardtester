@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   alternates: {
-    canonical: "/about",
+    canonical: "https://keyboardtesterhub.com/about",
   },
 };
 

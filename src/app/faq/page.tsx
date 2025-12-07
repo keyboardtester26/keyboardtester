@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+const siteUrl = "https://keyboardtesterhub.com";
+
 export const metadata: Metadata = {
   title: "Keyboard Tester FAQ - Frequently Asked Questions | Key Rollover Test Questions",
   description:
@@ -12,15 +14,20 @@ export const metadata: Metadata = {
     "key rollover test FAQ",
     "keyboard tester questions",
     "keyboard test help",
+    "key rollover test",
+    "key rollover tester",
+    "n-key rollover test",
+    "anti-ghosting test",
   ],
   openGraph: {
     title: "Keyboard Tester FAQ - Frequently Asked Questions",
     description:
       "Get answers to common questions about keyboardtesterhub, how it works, and how to use it for diagnosing keyboard issues.",
     type: "website",
+    url: `${siteUrl}/faq`,
   },
   alternates: {
-    canonical: "/faq",
+    canonical: `${siteUrl}/faq`,
   },
 };
 

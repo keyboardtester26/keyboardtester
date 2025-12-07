@@ -1031,6 +1031,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Additional SEO Content - Keyboard Testing Benefits */}
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+        <h2 className="mb-3 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-xl">
+          Free Online Keyboard Tester - No Installation Required
+        </h2>
+        <div className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <p>
+            Our <strong className="font-semibold text-zinc-900 dark:text-zinc-100">free keyboard tester</strong> is the easiest way to check if your keyboard is working correctly. Whether you're testing a new keyboard, diagnosing issues with an existing one, or performing a <a href="/blog/how-to-properly-test-a-keyboard" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">keyboard health check</a>, our tool provides instant feedback.
+          </p>
+          <p>
+            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">Key features of our keyboard tester:</strong>
+          </p>
+          <ul className="list-inside list-disc space-y-2 ml-2">
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Real-time key detection</strong> - See which keys are pressed instantly on the virtual keyboard</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Key rollover test</strong> - Test how many keys your keyboard can register simultaneously</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Anti-ghosting verification</strong> - Check if your keyboard prevents unwanted key presses</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Stuck key detection</strong> - Identify keys that don't release properly</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Comprehensive testing</strong> - Test all 104+ keys including function keys, modifiers, and special keys</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Works on all devices</strong> - Compatible with Windows, Mac, Linux, and mobile devices</li>
+          </ul>
+          <p>
+            Perfect for <a href="/blog/best-mechanical-keyboards-gaming-2025" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">gaming keyboards</a>, <a href="/blog/membrane-vs-mechanical-keyboards" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">mechanical keyboards</a>, and all keyboard types. Start testing your keyboard now - no signup or download required.
+          </p>
+        </div>
+      </section>
+
       <section className="grid gap-3 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-3 sm:text-sm">
         <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
           <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">

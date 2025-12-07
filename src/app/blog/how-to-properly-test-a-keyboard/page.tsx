@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+const siteUrl = "https://keyboardtesterhub.com";
+
 export const metadata: Metadata = {
   title: "How to Properly Test a Keyboard Before You Trust It | Key Rollover Test Guide",
   description:
@@ -12,7 +14,39 @@ export const metadata: Metadata = {
     "keyboard diagnostic guide",
     "mechanical keyboard test",
     "keyboard troubleshooting",
+    "key rollover test",
+    "key rollover tester",
+    "n-key rollover test",
+    "anti-ghosting test",
   ],
+  openGraph: {
+    title: "How to Properly Test a Keyboard Before You Trust It",
+    description:
+      "Step-by-step guide to test any keyboard using an online keyboard tester: check every key, perform key rollover test, detect ghosting, and test N-key rollover.",
+    url: `${siteUrl}/blog/how-to-properly-test-a-keyboard`,
+    type: "article",
+    publishedTime: "2025-11-24",
+    modifiedTime: "2025-11-24",
+    authors: ["keyboardtesterhub"],
+    images: [
+      {
+        url: `${siteUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "How to Properly Test a Keyboard - Key Rollover Test Guide",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Properly Test a Keyboard Before You Trust It",
+    description:
+      "Step-by-step guide to test any keyboard using an online keyboard tester: check every key, perform key rollover test, detect ghosting, and test N-key rollover.",
+    images: [`${siteUrl}/og-image.png`],
+  },
+  alternates: {
+    canonical: `${siteUrl}/blog/how-to-properly-test-a-keyboard`,
+  },
 };
 
 export default function BlogPostKeyboardTest() {
@@ -33,9 +67,57 @@ export default function BlogPostKeyboardTest() {
             author: {
               "@type": "Organization",
               name: "keyboardtesterhub",
+              url: "https://keyboardtesterhub.com",
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "keyboardtesterhub",
+              url: "https://keyboardtesterhub.com",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://keyboardtesterhub.com/logo.png",
+              },
             },
             description:
-              "Step-by-step checklist for testing mechanical and laptop keyboards using an online keyboard tester before you rely on them every day.",
+              "Step-by-step checklist for testing mechanical and laptop keyboards using an online keyboard tester before you rely on them every day. Learn how to perform key rollover test, detect ghosting, and verify keyboard functionality.",
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": "https://keyboardtesterhub.com/blog/how-to-properly-test-a-keyboard",
+            },
+            image: "https://keyboardtesterhub.com/og-image.png",
+            articleSection: "Testing",
+            keywords: "keyboard testing, key rollover test, keyboard diagnostic, gaming keyboard test, mechanical keyboard test",
+            inLanguage: "en-US",
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://keyboardtesterhub.com",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Blog",
+                item: "https://keyboardtesterhub.com/blog",
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: "How to Properly Test a Keyboard",
+                item: "https://keyboardtesterhub.com/blog/how-to-properly-test-a-keyboard",
+              },
+            ],
           }),
         }}
       />

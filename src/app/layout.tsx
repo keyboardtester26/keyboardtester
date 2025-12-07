@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | keyboardtesterhub",
   },
   description:
-    "Free online keyboard tester and key rollover test tool. Test N-key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards, mechanical keyboards, and troubleshooting stuck keys. Works on Windows, Mac, and Linux. No download required.",
+    "Free online keyboard tester and key rollover test tool. Test N-key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards, mechanical keyboards, and troubleshooting stuck keys. Works on Windows, Mac, and Linux. No download required. Test key rollover, keyboard ghosting, and verify all keys work correctly.",
   keywords: [
     "key rollover test",
     "key rollover tester",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   alternates: {
-    canonical: "/",
+    canonical: siteUrl,
   },
   openGraph: {
     type: "website",
@@ -138,7 +138,13 @@ export default function RootLayout({
       "@type": "Organization",
       name: "keyboardtesterhub",
       url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/logo.png`,
+      },
     },
+    inLanguage: "en-US",
+    isAccessibleForFree: true,
   };
 
   const softwareApp = {
@@ -161,6 +167,16 @@ export default function RootLayout({
     },
     description:
       "Free online keyboard testing tool and key rollover tester. Test N-key rollover, key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards and mechanical keyboards.",
+    featureList: [
+      "Key rollover test",
+      "N-key rollover test",
+      "Anti-ghosting test",
+      "Keyboard diagnostic",
+      "Stuck key detection",
+      "Gaming keyboard testing",
+      "Mechanical keyboard tester",
+    ],
+    screenshot: `${siteUrl}/og-image.png`,
   };
 
   return (
@@ -289,21 +305,58 @@ export default function RootLayout({
             </main>
 
             <footer className="mt-auto border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80">
-            <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-              <p className="dark:text-zinc-400">
-                © {new Date().getFullYear()} keyboardtesterhub. All rights
-                reserved.
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                <a href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                  Privacy Policy
-                </a>
-                <a href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                  Terms of Use
-                </a>
-                <a href="/contact" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                  Contact
-                </a>
+            <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 mb-4">
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">Tools</h3>
+                  <ul className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                    <li><a href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300">Keyboard Tester</a></li>
+                    <li><a href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300">Key Rollover Test</a></li>
+                    <li><a href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300">Anti-Ghosting Test</a></li>
+                    <li><a href="/faq" className="hover:text-zinc-700 dark:hover:text-zinc-300">FAQ</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">Guides</h3>
+                  <ul className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                    <li><a href="/blog" className="hover:text-zinc-700 dark:hover:text-zinc-300">Blog</a></li>
+                    <li><a href="/blog/how-to-properly-test-a-keyboard" className="hover:text-zinc-700 dark:hover:text-zinc-300">How to Test Keyboard</a></li>
+                    <li><a href="/blog/best-mechanical-keyboards-gaming-2025" className="hover:text-zinc-700 dark:hover:text-zinc-300">Gaming Keyboards</a></li>
+                    <li><a href="/blog/keyboard-switch-guide" className="hover:text-zinc-700 dark:hover:text-zinc-300">Switch Guide</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">Resources</h3>
+                  <ul className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                    <li><a href="/about" className="hover:text-zinc-700 dark:hover:text-zinc-300">About</a></li>
+                    <li><a href="/contact" className="hover:text-zinc-700 dark:hover:text-zinc-300">Contact</a></li>
+                    <li><a href="/blog/membrane-vs-mechanical-keyboards" className="hover:text-zinc-700 dark:hover:text-zinc-300">Membrane vs Mechanical</a></li>
+                    <li><a href="/blog/how-to-clean-keyboard" className="hover:text-zinc-700 dark:hover:text-zinc-300">Keyboard Cleaning</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">Legal</h3>
+                  <ul className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                    <li><a href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300">Privacy Policy</a></li>
+                    <li><a href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300">Terms of Use</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4 flex flex-col gap-2 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+                <p className="dark:text-zinc-400">
+                  © {new Date().getFullYear()} keyboardtesterhub. All rights reserved.
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <a href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
+                    Privacy
+                  </a>
+                  <a href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
+                    Terms
+                  </a>
+                  <a href="/contact" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
+                    Contact
+                  </a>
+                </div>
               </div>
             </div>
           </footer>
