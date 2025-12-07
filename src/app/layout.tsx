@@ -304,62 +304,51 @@ export default function RootLayout({
               <KeyboardProvider>{children}</KeyboardProvider>
             </main>
 
-            <footer className="mt-auto border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80">
-            <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-              <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 mb-4">
-                <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">Tools</h3>
-                  <ul className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                    <li><a href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300">Keyboard Tester</a></li>
-                    <li><a href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300">Key Rollover Test</a></li>
-                    <li><a href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300">Anti-Ghosting Test</a></li>
-                    <li><a href="/faq" className="hover:text-zinc-700 dark:hover:text-zinc-300">FAQ</a></li>
-                  </ul>
+            <footer className="mt-auto border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
+              <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+                <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 mb-6">
+                  <div>
+                    <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 mb-3">Tools</h3>
+                    <ul className="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                      <li><a href="/" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Keyboard Tester</a></li>
+                      <li><a href="/" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Key Rollover Test</a></li>
+                      <li><a href="/" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Anti-Ghosting Test</a></li>
+                      <li><a href="/faq" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">FAQ</a></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 mb-3">Guides</h3>
+                    <ul className="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                      <li><a href="/blog" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Blog</a></li>
+                      <li><a href="/blog/how-to-properly-test-a-keyboard" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">How to Test Keyboard</a></li>
+                      <li><a href="/blog/best-mechanical-keyboards-gaming-2025" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Gaming Keyboards</a></li>
+                      <li><a href="/blog/keyboard-switch-guide" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Switch Guide</a></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 mb-3">Resources</h3>
+                    <ul className="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                      <li><a href="/about" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About</a></li>
+                      <li><a href="/contact" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a></li>
+                      <li><a href="/blog/membrane-vs-mechanical-keyboards" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Membrane vs Mechanical</a></li>
+                      <li><a href="/blog/how-to-clean-keyboard" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Keyboard Cleaning</a></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 mb-3">Legal</h3>
+                    <ul className="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                      <li><a href="/privacy" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Privacy Policy</a></li>
+                      <li><a href="/terms" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Terms of Use</a></li>
+                    </ul>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">Guides</h3>
-                  <ul className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                    <li><a href="/blog" className="hover:text-zinc-700 dark:hover:text-zinc-300">Blog</a></li>
-                    <li><a href="/blog/how-to-properly-test-a-keyboard" className="hover:text-zinc-700 dark:hover:text-zinc-300">How to Test Keyboard</a></li>
-                    <li><a href="/blog/best-mechanical-keyboards-gaming-2025" className="hover:text-zinc-700 dark:hover:text-zinc-300">Gaming Keyboards</a></li>
-                    <li><a href="/blog/keyboard-switch-guide" className="hover:text-zinc-700 dark:hover:text-zinc-300">Switch Guide</a></li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">Resources</h3>
-                  <ul className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                    <li><a href="/about" className="hover:text-zinc-700 dark:hover:text-zinc-300">About</a></li>
-                    <li><a href="/contact" className="hover:text-zinc-700 dark:hover:text-zinc-300">Contact</a></li>
-                    <li><a href="/blog/membrane-vs-mechanical-keyboards" className="hover:text-zinc-700 dark:hover:text-zinc-300">Membrane vs Mechanical</a></li>
-                    <li><a href="/blog/how-to-clean-keyboard" className="hover:text-zinc-700 dark:hover:text-zinc-300">Keyboard Cleaning</a></li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">Legal</h3>
-                  <ul className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                    <li><a href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300">Privacy Policy</a></li>
-                    <li><a href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300">Terms of Use</a></li>
-                  </ul>
-                </div>
-              </div>
-              <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4 flex flex-col gap-2 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
-                <p className="dark:text-zinc-400">
-                  © {new Date().getFullYear()} keyboardtesterhub. All rights reserved.
-                </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  <a href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                    Privacy
-                  </a>
-                  <a href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                    Terms
-                  </a>
-                  <a href="/contact" className="hover:text-zinc-700 dark:hover:text-zinc-300 dark:text-zinc-400">
-                    Contact
-                  </a>
+                <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4 flex flex-col gap-2 text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
+                  <p>
+                    © {new Date().getFullYear()} keyboardtesterhub. All rights reserved.
+                  </p>
                 </div>
               </div>
-            </div>
-          </footer>
+            </footer>
         </div>
         </ThemeProvider>
       </body>
