@@ -1015,7 +1015,7 @@ export default function Home() {
           </span>
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-base">
-          Test your keyboard instantly - check every key, test <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover</strong>, <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N-key rollover</strong>, and <strong className="font-semibold text-zinc-900 dark:text-zinc-100">anti-ghosting</strong>. Press any key and watch it light up in real time. Perfect for gaming keyboards, mechanical keyboards, and troubleshooting. No downloads required.
+          Test your keyboard instantly - check every key, test <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover</strong>, <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N-key rollover</strong>, and <strong className="font-semibold text-zinc-900 dark:text-zinc-100">anti-ghosting</strong>. Press any key and watch it light up in real time. Perfect for gaming keyboards, mechanical keyboards, and troubleshooting. No downloads required. Works on all devices.
         </p>
       </section>
 
