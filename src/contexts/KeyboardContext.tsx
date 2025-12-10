@@ -26,8 +26,12 @@ export function KeyboardProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Prevent default for Space and arrow keys to avoid scrolling
-      if (["Space", "ArrowUp", "ArrowDown", "PageUp", "PageDown"].includes(event.code)) {
+      // Prevent default for function keys (F1-F12) to avoid browser shortcuts
+      // F1: Help, F3: Find, F5: Refresh, F11: Fullscreen, F12: DevTools, etc.
+      const functionKeys = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"];
+      
+      // Prevent default for Space, arrow keys, and all function keys
+      if (["Space", "ArrowUp", "ArrowDown", "PageUp", "PageDown", ...functionKeys].includes(event.code)) {
         event.preventDefault();
       }
 

@@ -51,7 +51,11 @@ function KeyComponent({
   const bgClass = isSpacer
     ? "bg-transparent border-transparent opacity-0 pointer-events-none"
     : isYellowKey
-      ? "bg-amber-200 dark:bg-amber-900/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200"
+      ? isPressed
+        ? "bg-blue-500 dark:bg-blue-500 border-blue-400 dark:border-blue-400 text-white"
+        : hasBeenTested
+          ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400"
+          : "bg-amber-200 dark:bg-amber-900/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200"
       : isPressed
         ? "bg-emerald-500 dark:bg-emerald-600 border-emerald-400 dark:border-emerald-500 text-white"
         : hasBeenTested
@@ -63,7 +67,9 @@ function KeyComponent({
     : "shadow-sm";
 
   const pressedClass = isPressed
-    ? "scale-95 ring-2 ring-emerald-400/30"
+    ? isYellowKey
+      ? "scale-95 ring-2 ring-blue-400/30"
+      : "scale-95 ring-2 ring-emerald-400/30"
     : "";
 
   // Text alignment - handle Mac symbols
@@ -125,7 +131,11 @@ function KeyComponent({
     <button
       type="button"
       className={`${baseClasses} ${sizeClasses} ${shadowClass} ${bgClass} ${pressedClass} ${textAlignClass} ${
-        hasBeenTested && !isPressed ? "ring-1 ring-emerald-300/40" : ""
+        hasBeenTested && !isPressed 
+          ? isYellowKey 
+            ? "ring-1 ring-blue-300/40" 
+            : "ring-1 ring-emerald-300/40"
+          : ""
       } ${isBackspace ? "overflow-hidden text-ellipsis whitespace-nowrap" : ""}`}
       style={flexValue ? { flex: flexValue } : {}}
       data-key-code={code}
