@@ -354,7 +354,7 @@ export default function Home() {
         "@type": "HowToStep",
         position: 1,
         name: "Open keyboardtesterhub",
-        text: "Navigate to keyboardtesterhub.com in your web browser. No installation or signup required.",
+        text: "Navigate to keyboardtester-yu25.vercel.app in your web browser. No installation or signup required.",
       },
       {
         "@type": "HowToStep",
@@ -398,12 +398,12 @@ export default function Home() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboardtesterhub.com",
+        item: "https://keyboardtester-yu25.vercel.app",
       },
     ],
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
@@ -415,19 +415,72 @@ export default function Home() {
     const sectionSpacing = 10;
     const boxPadding = 4;
 
+    // Load logo image
+    const loadLogo = async (): Promise<{ dataUrl: string; width: number; height: number } | null> => {
+      try {
+        const response = await fetch("/logo.png");
+        const blob = await response.blob();
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const img = new Image();
+            img.onload = () => {
+              resolve({
+                dataUrl: reader.result as string,
+                width: img.width,
+                height: img.height,
+              });
+            };
+            img.onerror = () => resolve(null);
+            img.src = reader.result as string;
+          };
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(blob);
+        });
+      } catch {
+        return null;
+      }
+    };
+
+    const logoInfo = await loadLogo();
+
+    // Helper function to add logo to header (used by both initial header and addPage)
+    const addLogoToHeader = () => {
+      if (logoInfo) {
+        try {
+          // Calculate logo size maintaining aspect ratio - make it bigger
+          const maxLogoHeight = 26; // Max height with breathing space
+          const aspectRatio = logoInfo.width / logoInfo.height;
+          const logoHeight = maxLogoHeight;
+          const logoWidth = logoHeight * aspectRatio;
+          const logoY = (headerHeight - logoHeight) / 2; // Center vertically
+          
+          doc.addImage(logoInfo.dataUrl, "PNG", marginX, logoY, logoWidth, logoHeight);
+        } catch {
+          // Fallback to text if image fails
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(15);
+          doc.text("keyboardtesterhub", marginX, 14);
+        }
+      } else {
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(15);
+        doc.text("keyboardtesterhub", marginX, 14);
+      }
+    };
+
     // Helper function to add a new page with header
     const addPage = () => {
       doc.addPage();
       doc.setFillColor(15, 23, 42);
       doc.rect(0, 0, pageWidth, headerHeight, "F");
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(15);
-      doc.text("keyboardtesterhub", marginX, 14);
-      doc.setFontSize(10);
-      doc.text("Keyboard & Mouse Diagnostic Report", marginX, 22);
+      
+      // Add logo using shared function
+      addLogoToHeader();
+      
       doc.setFontSize(9);
       doc.setTextColor(226, 232, 240);
-      doc.text("keyboardtesterhub.com", pageWidth - marginX, 11, {
+      doc.text("keyboardtester-yu25.vercel.app", pageWidth - marginX, 11, {
         align: "right",
       });
       doc.text(`Report Date: ${new Date().toLocaleDateString()}`, pageWidth - marginX, 18, {
@@ -465,14 +518,13 @@ export default function Home() {
     // Initial header
     doc.setFillColor(15, 23, 42);
     doc.rect(0, 0, pageWidth, headerHeight, "F");
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(15);
-    doc.text("keyboardtesterhub", marginX, 14);
-    doc.setFontSize(10);
-    doc.text("Keyboard & Mouse Diagnostic Report", marginX, 22);
+    
+    // Add logo using shared function (same size as all pages)
+    addLogoToHeader();
+    
     doc.setFontSize(9);
     doc.setTextColor(226, 232, 240);
-    doc.text("keyboardtesterhub.com", pageWidth - marginX, 11, {
+    doc.text("keyboardtester-yu25.vercel.app", pageWidth - marginX, 11, {
       align: "right",
     });
     doc.text(`Report Date: ${new Date().toLocaleDateString()}`, pageWidth - marginX, 18, {
@@ -857,7 +909,7 @@ export default function Home() {
         { align: "center" }
       );
       doc.text(
-        "keyboardtesterhub.com",
+        "keyboardtester-yu25.vercel.app",
         pageWidth - marginX,
         pageHeight - 10,
         { align: "right" }
@@ -955,26 +1007,148 @@ export default function Home() {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <section className="space-y-4">
+      <section className="space-y-4 mb-6">
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl">
           Free Online{" "}
           <span className="whitespace-nowrap text-zinc-950 dark:text-zinc-50">
-            Keyboard Tester & Key Rollover Test
+            Keyboard Tester
           </span>
-          </h1>
+        </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-base">
-          Test your keyboard's <span className="font-medium text-zinc-800 dark:text-zinc-200">key rollover</span>, N-key rollover, and anti-ghosting capabilities instantly. Press any key and watch it light up in real time. keyboardtesterhub helps you quickly find{" "}
-          <span className="font-medium text-zinc-800 dark:text-zinc-200">
-            dead, stuck, or repeating keys
-          </span>{" "}
-          on any keyboard — perfect for gaming keyboards and mechanical keyboards. No downloads required, works right in your browser.
+          Test your keyboard instantly - check every key, test <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover</strong>, <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N-key rollover</strong>, and <strong className="font-semibold text-zinc-900 dark:text-zinc-100">anti-ghosting</strong>. Press any key and watch it light up in real time. Perfect for gaming keyboards, mechanical keyboards, and troubleshooting. No downloads required.
         </p>
+      </section>
+
+      {/* Keyboard Tester - Moved to Top */}
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-6 mb-8">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+              Keyboard visualizer
+            </h2>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setKeyboardLayout(keyboardLayout === "ANSI" ? "ISO" : "ANSI")}
+                className="rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
+                aria-label={`Switch to ${keyboardLayout === "ANSI" ? "ISO" : "ANSI"} layout`}
+              >
+                {keyboardLayout}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowNumpad(!showNumpad)}
+                className="rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
+                aria-label={showNumpad ? "Hide numpad" : "Show numpad"}
+              >
+                <span className="hidden sm:inline">{showNumpad ? "Hide" : "Show"} Numpad</span>
+                <span className="sm:hidden">Num</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="flex items-center gap-1.5 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
+                aria-label="Reset all test data"
+              >
+                <RotateCcw className="h-3 w-3" />
+                <span className="hidden sm:inline">Reset</span>
+              </button>
+              <span className="rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                Live · Listening to key presses
+              </span>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-dashed border-zinc-200 dark:border-zinc-700 bg-zinc-50/80 dark:bg-zinc-800/50 p-3 text-center text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
+            This tester listens to your whole keyboard. Just{" "}
+            <span className="font-medium text-zinc-700 dark:text-zinc-300">
+              start pressing keys
+            </span>{" "}
+            and they&apos;ll light up. Try holding multiple keys to check
+            anti-ghosting.
+          </div>
+
+          <div className="space-y-2 rounded-xl bg-zinc-900 dark:bg-zinc-950 px-3 py-3 text-xs text-zinc-200 dark:text-zinc-300 sm:px-4 sm:py-4 sm:text-sm">
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-zinc-100 dark:text-zinc-200">Current key</span>
+              {currentlyPressed.length > 0 ? (
+                <span className="text-[11px] text-emerald-400 dark:text-emerald-500 sm:text-xs">
+                  {currentlyPressed.length} key
+                  {currentlyPressed.length > 1 ? "s" : ""} pressed
+                </span>
+              ) : (
+                <span className="text-[11px] text-zinc-500 dark:text-zinc-400 sm:text-xs">
+                  Waiting for input…
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between gap-2 rounded-lg bg-zinc-800/80 dark:bg-zinc-900/80 px-3 py-2 sm:px-4 sm:py-3">
+              <div className="flex items-baseline gap-2">
+                <span className="text-lg font-semibold tracking-tight dark:text-zinc-100 sm:text-2xl">
+                  {lastEvent?.key || "—"}
+                </span>
+                {lastEvent?.code && (
+                  <span className="rounded-full bg-zinc-900 dark:bg-zinc-800 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-500">
+                    {lastEvent.code}
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-col items-end text-[10px] text-zinc-400 dark:text-zinc-500">
+                <span>
+                  Location:{" "}
+                  <span className="font-medium text-zinc-100 dark:text-zinc-200">
+                    {lastEvent ? lastEvent.location : "—"}
+                  </span>
+                </span>
+                <span>
+                  Time:{" "}
+                  <span className="font-medium text-zinc-100 dark:text-zinc-200">
+                    {lastEvent?.timestamp || "—"}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2">
+            <Keyboard layout={keyboardLayout} showNumpad={showNumpad} />
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="grid gap-3 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-3 sm:text-sm mb-8">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
+            Total key presses
+          </p>
+          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
+            {totalPresses}
+          </p>
+        </div>
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
+            Max keys at once
+          </p>
+          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
+            {maxSimultaneous}
+          </p>
+        </div>
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
+            Keys tested
+          </p>
+          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
+            {uniqueCodes.size} / 104
+          </p>
+        </div>
       </section>
 
       {/* SEO Content Section - Key Rollover Test */}
       <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
         <h2 className="mb-3 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-xl">
-          What is Key Rollover Test?
+          What is a Key Rollover Test?
         </h2>
         <div className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
           <p>
@@ -985,6 +1159,27 @@ export default function Home() {
           </p>
           <p>
             Use our free <strong className="font-semibold text-zinc-900 dark:text-zinc-100">key rollover tester</strong> to test your keyboard's capabilities. Simply press multiple keys simultaneously and see which ones register. This helps identify if your keyboard supports the key combinations you need for gaming or professional work. Our tool works with mechanical keyboards, membrane keyboards, and laptop keyboards.
+          </p>
+        </div>
+      </section>
+
+      {/* SEO Content Section - N Key Rollover Tester */}
+      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
+        <h2 className="mb-3 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-xl">
+          N Key Rollover Tester - Test Full N-Key Rollover Online
+        </h2>
+        <div className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <p>
+            Our <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N key rollover tester</strong> is a free online tool that lets you test if your keyboard supports full N-key rollover (NKRO). N-key rollover means your keyboard can register every single key pressed simultaneously, which is essential for competitive gaming and fast typing.
+          </p>
+          <p>
+            To use our <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N key rollover tester</strong>, simply press as many keys as possible at the same time. Watch the virtual keyboard - if all keys light up correctly, your keyboard supports full N-key rollover. If some keys don't register, your keyboard has limited rollover capabilities.
+          </p>
+          <p>
+            Most gaming keyboards support at least 6-key rollover, but premium models offer full N-key rollover. Standard keyboards typically only support 2-3 key rollover, which can cause problems during intense gaming sessions or fast typing. Use our <strong className="font-semibold text-zinc-900 dark:text-zinc-100">N key rollover tester</strong> to verify your keyboard's capabilities before you buy or to troubleshoot issues with your current keyboard.
+          </p>
+          <p>
+            <strong className="font-semibold text-zinc-900 dark:text-zinc-100">Why test N-key rollover?</strong> In gaming, you often need to press multiple keys simultaneously (W+A+S+D+Space+Shift+Ctrl). If your keyboard can't handle these combinations, you'll experience missed inputs, which can cost you matches. Our N key rollover tester helps you identify these limitations instantly.
           </p>
         </div>
       </section>
@@ -1046,6 +1241,7 @@ export default function Home() {
           <ul className="list-inside list-disc space-y-2 ml-2">
             <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Real-time key detection</strong> - See which keys are pressed instantly on the virtual keyboard</li>
             <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Key rollover test</strong> - Test how many keys your keyboard can register simultaneously</li>
+            <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">N key rollover tester</strong> - Verify if your keyboard supports full N-key rollover</li>
             <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Anti-ghosting verification</strong> - Check if your keyboard prevents unwanted key presses</li>
             <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Stuck key detection</strong> - Identify keys that don't release properly</li>
             <li><strong className="font-semibold text-zinc-900 dark:text-zinc-100">Comprehensive testing</strong> - Test all 104+ keys including function keys, modifiers, and special keys</li>
@@ -1057,32 +1253,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="grid gap-3 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-3 sm:text-sm">
-        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
-            Total key presses
-          </p>
-          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
-            {totalPresses}
-          </p>
-        </div>
-        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
-            Max keys at once
-          </p>
-          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
-            {maxSimultaneous}
-          </p>
-        </div>
-        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2.5 shadow-sm sm:px-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-400 dark:text-zinc-500 sm:text-xs">
-            Keys tested
-          </p>
-          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100 sm:text-xl">
-            {uniqueCodes.size} / 104
-          </p>
-        </div>
-      </section>
+
 
       <section className="grid gap-4 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-2 sm:text-sm">
         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-5">
@@ -1461,103 +1632,6 @@ export default function Home() {
       </section>
 
       <AdSlot position="top" />
-
-      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm sm:p-6">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
-              Keyboard visualizer
-            </h2>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setKeyboardLayout(keyboardLayout === "ANSI" ? "ISO" : "ANSI")}
-                className="rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
-                aria-label={`Switch to ${keyboardLayout === "ANSI" ? "ISO" : "ANSI"} layout`}
-              >
-                {keyboardLayout}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowNumpad(!showNumpad)}
-                className="rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
-                aria-label={showNumpad ? "Hide numpad" : "Show numpad"}
-              >
-                <span className="hidden sm:inline">{showNumpad ? "Hide" : "Show"} Numpad</span>
-                <span className="sm:hidden">Num</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="flex items-center gap-1.5 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700 sm:text-xs"
-                aria-label="Reset all test data"
-              >
-                <RotateCcw className="h-3 w-3" />
-                <span className="hidden sm:inline">Reset</span>
-              </button>
-              <span className="rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
-                Live · Listening to key presses
-              </span>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-dashed border-zinc-200 dark:border-zinc-700 bg-zinc-50/80 dark:bg-zinc-800/50 p-3 text-center text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
-            This tester listens to your whole keyboard. Just{" "}
-            <span className="font-medium text-zinc-700 dark:text-zinc-300">
-              start pressing keys
-            </span>{" "}
-            and they&apos;ll light up. Try holding multiple keys to check
-            anti-ghosting.
-          </div>
-
-          <div className="space-y-2 rounded-xl bg-zinc-900 dark:bg-zinc-950 px-3 py-3 text-xs text-zinc-200 dark:text-zinc-300 sm:px-4 sm:py-4 sm:text-sm">
-            <div className="flex items-center justify-between">
-              <span className="font-medium text-zinc-100 dark:text-zinc-200">Current key</span>
-              {currentlyPressed.length > 0 ? (
-                <span className="text-[11px] text-emerald-400 dark:text-emerald-500 sm:text-xs">
-                  {currentlyPressed.length} key
-                  {currentlyPressed.length > 1 ? "s" : ""} pressed
-                </span>
-              ) : (
-                <span className="text-[11px] text-zinc-500 dark:text-zinc-400 sm:text-xs">
-                  Waiting for input…
-                </span>
-              )}
-            </div>
-
-            <div className="flex items-center justify-between gap-2 rounded-lg bg-zinc-800/80 dark:bg-zinc-900/80 px-3 py-2 sm:px-4 sm:py-3">
-              <div className="flex items-baseline gap-2">
-                <span className="text-lg font-semibold tracking-tight dark:text-zinc-100 sm:text-2xl">
-                  {lastEvent?.key || "—"}
-                </span>
-                {lastEvent?.code && (
-                  <span className="rounded-full bg-zinc-900 dark:bg-zinc-800 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-500">
-                    {lastEvent.code}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col items-end text-[10px] text-zinc-400 dark:text-zinc-500">
-                <span>
-                  Location:{" "}
-                  <span className="font-medium text-zinc-100 dark:text-zinc-200">
-                    {lastEvent ? lastEvent.location : "—"}
-                  </span>
-                </span>
-                <span>
-                  Time:{" "}
-                  <span className="font-medium text-zinc-100 dark:text-zinc-200">
-                    {lastEvent?.timestamp || "—"}
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-2">
-            <Keyboard layout={keyboardLayout} showNumpad={showNumpad} />
-          </div>
-        </div>
-      </section>
 
       <AdSlot position="bottom" />
 

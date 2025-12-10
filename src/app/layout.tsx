@@ -17,19 +17,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://keyboardtesterhub.com";
+const siteUrl = "https://keyboardtester-yu25.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "keyboardtesterhub – Free Online Keyboard Tester | Test Every Key Instantly",
+    default: "Free Online Keyboard Tester - Test Every Key Instantly | Key Rollover Test",
     template: "%s | keyboardtesterhub",
   },
   description:
-    "Free online keyboard tester and key rollover test tool. Test N-key rollover, anti-ghosting, and check every key instantly. Perfect for gaming keyboards, mechanical keyboards, and troubleshooting stuck keys. Works on Windows, Mac, and Linux. No download required. Test key rollover, keyboard ghosting, and verify all keys work correctly.",
+    "Free online keyboard tester to check every key, test key rollover, N-key rollover, and anti-ghosting. Test your keyboard instantly - no download required. Works on Windows, Mac, Linux. Perfect for gaming keyboards and mechanical keyboards.",
   keywords: [
     "key rollover test",
     "key rollover tester",
+    "n key rollover tester",
     "n-key rollover test",
     "keyboard rollover test",
     "keyboard tester",
@@ -78,9 +79,9 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "keyboardtesterhub",
-    title: "keyboardtesterhub – Free Key Rollover Test & Keyboard Tester",
+    title: "Free Online Keyboard Tester - Test Every Key Instantly",
     description:
-      "Test N-key rollover, key rollover, and anti-ghosting instantly. Free online keyboard tester to check every key, detect stuck keys, and diagnose keyboard problems. Perfect for gaming keyboards. Works on Windows, Mac, and Linux. No download required.",
+      "Free online keyboard tester to check every key, test key rollover, N-key rollover, and anti-ghosting. No download required. Works on all devices.",
     locale: "en_US",
     images: [
       {
@@ -93,9 +94,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "keyboardtesterhub – Free Key Rollover Test & Keyboard Tester",
+    title: "Free Online Keyboard Tester - Test Every Key Instantly",
     description:
-      "Test N-key rollover and key rollover instantly. Free keyboard tester to check every key, detect stuck keys, and test anti-ghosting. Perfect for gaming keyboards. No download required.",
+      "Free online keyboard tester to check every key, test key rollover, N-key rollover, and anti-ghosting. No download required.",
     images: [`${siteUrl}/og-image.png`],
     creator: "@keyboardtesterhub",
   },

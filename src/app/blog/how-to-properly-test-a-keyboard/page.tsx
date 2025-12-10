@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const siteUrl = "https://keyboardtesterhub.com";
+const siteUrl = "https://keyboardtester-yu25.vercel.app";
 
 export const metadata: Metadata = {
   title: "How to Properly Test a Keyboard Before You Trust It | Key Rollover Test Guide",
@@ -67,24 +67,24 @@ export default function BlogPostKeyboardTest() {
             author: {
               "@type": "Organization",
               name: "keyboardtesterhub",
-              url: "https://keyboardtesterhub.com",
+              url: "https://keyboardtester-yu25.vercel.app",
             },
             publisher: {
               "@type": "Organization",
               name: "keyboardtesterhub",
-              url: "https://keyboardtesterhub.com",
+              url: "https://keyboardtester-yu25.vercel.app",
               logo: {
                 "@type": "ImageObject",
-                url: "https://keyboardtesterhub.com/logo.png",
+                url: "https://keyboardtester-yu25.vercel.app/logo.png",
               },
             },
             description:
               "Step-by-step checklist for testing mechanical and laptop keyboards using an online keyboard tester before you rely on them every day. Learn how to perform key rollover test, detect ghosting, and verify keyboard functionality.",
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": "https://keyboardtesterhub.com/blog/how-to-properly-test-a-keyboard",
+              "@id": "https://keyboardtester-yu25.vercel.app/blog/how-to-properly-test-a-keyboard",
             },
-            image: "https://keyboardtesterhub.com/og-image.png",
+            image: "https://keyboardtester-yu25.vercel.app/og-image.png",
             articleSection: "Testing",
             keywords: "keyboard testing, key rollover test, keyboard diagnostic, gaming keyboard test, mechanical keyboard test",
             inLanguage: "en-US",
@@ -103,19 +103,19 @@ export default function BlogPostKeyboardTest() {
                 "@type": "ListItem",
                 position: 1,
                 name: "Home",
-                item: "https://keyboardtesterhub.com",
+                item: "https://keyboardtester-yu25.vercel.app",
               },
               {
                 "@type": "ListItem",
                 position: 2,
                 name: "Blog",
-                item: "https://keyboardtesterhub.com/blog",
+                item: "https://keyboardtester-yu25.vercel.app/blog",
               },
               {
                 "@type": "ListItem",
                 position: 3,
                 name: "How to Properly Test a Keyboard",
-                item: "https://keyboardtesterhub.com/blog/how-to-properly-test-a-keyboard",
+                item: "https://keyboardtester-yu25.vercel.app/blog/how-to-properly-test-a-keyboard",
               },
             ],
           }),

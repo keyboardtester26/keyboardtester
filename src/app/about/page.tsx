@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   alternates: {
-    canonical: "https://keyboardtesterhub.com/about",
+    canonical: "https://keyboardtester-yu25.vercel.app/about",
   },
 };
 
@@ -34,13 +34,13 @@ export default function AboutPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboardtesterhub.com",
+        item: "https://keyboardtester-yu25.vercel.app",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "About",
-        item: "https://keyboardtesterhub.com/about",
+        item: "https://keyboardtester-yu25.vercel.app/about",
       },
     ],
   };
@@ -49,7 +49,7 @@ export default function AboutPage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "keyboardtesterhub",
-    url: "https://keyboardtesterhub.com",
+    url: "https://keyboardtester-yu25.vercel.app",
     description: "Free online keyboard testing tool for gamers, developers, and keyboard enthusiasts.",
     foundingDate: "2024",
   };

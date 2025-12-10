@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const siteUrl = "https://keyboardtesterhub.com";
+const siteUrl = "https://keyboardtester-yu25.vercel.app";
 
 export const metadata: Metadata = {
   title: "Keyboard Tester FAQ - Frequently Asked Questions | Key Rollover Test Questions",
@@ -33,9 +33,24 @@ export const metadata: Metadata = {
 
 const faqs = [
   {
-    question: "How does keyboardtesterhub work?",
+    question: "What is a key rollover test?",
     answer:
-      "The tester listens to keyboard events directly from your browser. When you press a key, we detect the event and highlight the matching key on the visual layout. No installation or extra software is required.",
+      "A key rollover test checks how many keys your keyboard can register simultaneously. Our free key rollover test tool lets you test your keyboard's rollover capabilities instantly. Press multiple keys at once and see which ones register - this helps identify if your keyboard supports the key combinations you need for gaming or professional work.",
+  },
+  {
+    question: "What is an N key rollover tester?",
+    answer:
+      "An N key rollover tester is a tool that checks if your keyboard supports full N-key rollover (NKRO), meaning it can register all keys pressed at the same time. Our free N key rollover tester online lets you test this instantly - press as many keys as possible simultaneously and see if they all register correctly.",
+  },
+  {
+    question: "How does the key rollover tester work?",
+    answer:
+      "Our key rollover tester listens to keyboard events directly from your browser. When you press keys, we detect the events and highlight the matching keys on the visual layout. Press multiple keys simultaneously to test rollover capabilities. No installation or extra software is required.",
+  },
+  {
+    question: "How do I perform a key rollover test?",
+    answer:
+      "To perform a key rollover test, simply press multiple keys simultaneously on your keyboard. Our key rollover test tool will show which keys register. Try pressing common gaming combinations like W+A+S+D+Space+Shift. If all keys light up, your keyboard passes the key rollover test. This is essential for gaming keyboards.",
   },
   {
     question: "Do you record what I type?",
@@ -81,13 +96,13 @@ export default function FAQPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://keyboardtesterhub.com",
+        item: "https://keyboardtester-yu25.vercel.app",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "FAQ",
-        item: "https://keyboardtesterhub.com/faq",
+        item: "https://keyboardtester-yu25.vercel.app/faq",
       },
     ],
   };
